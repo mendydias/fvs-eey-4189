@@ -18,11 +18,13 @@ const styles = StyleSheet.create({
     fontSize: 56,
     fontWeight: "bold",
     color: "#2D3648",
+    textAlign: "center",
   },
   headerTwo: {
-    marginVertical: 5,
     fontSize: 36,
     fontWeight: "bold",
     color: "#2D3648",
+    height: 43,
+    textAlign: "center",
   },
 });

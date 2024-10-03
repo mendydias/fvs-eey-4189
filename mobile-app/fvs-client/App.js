@@ -1,6 +1,7 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import Heading from "./components/Heading";
 import FormInput from "./components/FormInput";
+import Button from "./components/Button";
 import { useState } from "react";
 
 export default function App() {
@@ -28,12 +29,8 @@ export default function App() {
         />
       </View>
       <View style={styles.footer}>
-        <Pressable>
-          <Text></Text>
-        </Pressable>
-        <Pressable>
-          <Text></Text>
-        </Pressable>
+        <Button variant="primary" label="Login" onPress={undefined} />
+        <Button variant="secondary" label="Register" onPress={undefined} />
       </View>
     </View>
   );
@@ -46,6 +43,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   header: {},
-  main: {},
-  footer: {},
+  main: {
+    marginTop: 48,
+  },
+  footer: {
+    marginTop: 48,
+    width: 320,
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+  },
 });
