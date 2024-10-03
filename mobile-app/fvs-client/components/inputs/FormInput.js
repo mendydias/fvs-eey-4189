@@ -1,4 +1,6 @@
 import { StyleSheet, Text, TextInput, View } from "react-native";
+import DateTimePicker from "@react-native-community/datetimepicker";
+import CalendarInput from "./CalendarInput";
 
 export default function FormInput({
   label,
@@ -6,17 +8,22 @@ export default function FormInput({
   onValueChange,
   secure,
   inputMode,
+  mode,
 }) {
   return (
     <View style={styles.formField}>
       <Text style={styles.textLabel}>{label}</Text>
-      <TextInput
-        style={styles.input}
-        value={value}
-        onChange={onValueChange}
-        secureTextEntry={secure}
-        inputMode={inputMode}
-      />
+      {mode === "date" ? (
+        <CalendarInput onDateChanged={onValueChange} dateValue={value} />
+      ) : (
+        <TextInput
+          style={styles.input}
+          value={value}
+          onChange={onValueChange}
+          secureTextEntry={secure}
+          inputMode={inputMode}
+        />
+      )}
     </View>
   );
 }
