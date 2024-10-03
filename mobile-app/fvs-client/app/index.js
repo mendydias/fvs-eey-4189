@@ -1,12 +1,17 @@
+import { useState } from "react";
 import { StyleSheet, View } from "react-native";
+import Button from "../components/Button";
 import Heading from "../components/Heading";
 import FormInput from "../components/inputs/FormInput";
-import Button from "../components/Button";
-import { useState } from "react";
+import { router } from "expo-router";
 
 export default function LoginPage() {
   const [nic, onNicChange] = useState("");
   const [password, onPasswordChange] = useState("");
+
+  const login = () => {
+    router.replace("/vote/choose");
+  };
 
   return (
     <View style={styles.container}>
@@ -29,7 +34,7 @@ export default function LoginPage() {
         />
       </View>
       <View style={styles.footer}>
-        <Button variant="primary" label="Login" onPress={undefined} />
+        <Button variant="primary" label="Login" onPress={login} />
         <Button variant="secondary" label="Register" link="/register/details" />
       </View>
     </View>
