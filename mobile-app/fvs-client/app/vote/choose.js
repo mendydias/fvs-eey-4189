@@ -23,7 +23,11 @@ export default function ChooseCandidatePage() {
           source={{ uri: "https://picsum.photos/320" }}
         />
         <View style={styles.btnContainer}>
-          <Button label="Vote" variant="primary" />
+          <Button
+            label="Vote"
+            variant="primary"
+            link="/vote/result?status=1&candidate=candidate 1"
+          />
         </View>
         <Heading level={2} text="Candidate 2" />
         <Image
@@ -31,7 +35,11 @@ export default function ChooseCandidatePage() {
           source={{ uri: "https://picsum.photos/320" }}
         />
         <View style={styles.btnContainer}>
-          <Button label="Vote" variant="primary" />
+          <Button
+            label="Vote"
+            variant="primary"
+            link="/vote/result?status=0&candidate=candidate 2"
+          />
         </View>
       </ScrollView>
     </SafeAreaView>
