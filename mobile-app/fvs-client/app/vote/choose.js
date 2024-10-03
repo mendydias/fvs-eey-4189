@@ -8,12 +8,23 @@ import {
 import Heading from "../../components/Heading";
 import Typography from "../../components/Typography";
 import Button from "../../components/Button";
+import { MaterialIcons } from "@expo/vector-icons";
+import IconButton from "../../components/IconButton";
 
 export default function ChooseCandidatePage() {
   return (
     <SafeAreaView style={styles.container}>
       <View>
-        <Heading text="FVS" />
+        <View style={styles.logoWrapper}>
+          <Heading text="FVS" />
+          <IconButton
+            link="/"
+            style={{
+              position: "absolute",
+              right: 0,
+            }}
+          />
+        </View>
         <Typography>Select a candidate from below and tap vote!</Typography>
       </View>
       <ScrollView style={styles.main}>
@@ -64,5 +75,11 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     marginBottom: 18,
+  },
+  logoWrapper: {
+    width: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
   },
 });
