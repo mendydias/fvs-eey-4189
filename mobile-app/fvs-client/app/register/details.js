@@ -1,17 +1,28 @@
-import { StyleSheet, View } from "react-native";
-import Heading from "../../components/Heading";
-import FormInput from "../../components/inputs/FormInput";
 import { useState } from "react";
+import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import Button from "../../components/Button";
+import Heading from "../../components/Heading";
+import CustomSelect from "../../components/inputs/CustomSelect";
+import FormInput from "../../components/inputs/FormInput";
+import { router } from "expo-router";
+import { StatusBar } from "expo-status-bar";
 
 export default function RegisterDetailsPage() {
+  const GENDERS = ["Male", "Female"];
+
   const [nic, onNicChange] = useState("");
   const [fullname, onNameChange] = useState("");
   const [dob, onDobChange] = useState(new Date());
-  const [gender, onGenderChange] = useState("");
+  const [gender, onGenderChange] = useState(GENDERS[0]);
   const [email, onEmailChange] = useState("");
 
+  const registerDetails = () => {
+    alert("Successfully registered!");
+    router.replace("/");
+  };
+
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.header}>
         <Heading text="FVS" />
         <Heading text="User Registration" level={2} />
@@ -35,40 +46,42 @@ export default function RegisterDetailsPage() {
           onValueChange={onDobChange}
           mode="date"
         />
-        <FormInput
-          label="National Identification Number"
-          value={nic}
-          onValueChange={onNicChange}
-          inputMode="text"
+        <CustomSelect
+          options={GENDERS}
+          current={gender}
+          onChange={onGenderChange}
+          label="Gender"
         />
         <FormInput
-          label="National Identification Number"
-          value={nic}
-          onValueChange={onNicChange}
-          inputMode="text"
+          label="Email address"
+          value={email}
+          onValueChange={onEmailChange}
+          inputMode="email"
+        />
+        <Button
+          label="Register!"
+          variant="primary"
+          style={{ marginTop: 44 }}
+          onPress={registerDetails}
         />
       </View>
-      <View style={styles.footer}></View>
-    </View>
+      <StatusBar />
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 4,
+    justifyContent: "center",
+    padding: 8,
   },
   header: {
-    flex: 1,
     width: "100%",
+    marginBottom: 16,
   },
   main: {
-    flex: 3,
     width: "100%",
     alignItems: "center",
-  },
-  footer: {
-    flex: 1,
-    width: "100%",
   },
 });

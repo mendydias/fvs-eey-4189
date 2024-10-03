@@ -1,22 +1,24 @@
 import { Link } from "expo-router";
 import { Pressable, StyleSheet, Text } from "react-native";
 
-export default function Button({ label, onPress, variant, link }) {
+export default function Button(props) {
   console.log(styles);
-
-  if (link !== null && link !== undefined && link !== "") {
+  if (props.link !== null && props.link !== undefined && props.link !== "") {
     return (
-      <Link href={link} asChild>
-        <Pressable style={styles[variant]}>
-          <Text style={styles[variant + "Text"]}>{label}</Text>
+      <Link href={props.link} asChild style={props.style}>
+        <Pressable style={styles[props.variant]}>
+          <Text style={styles[props.variant + "Text"]}>{props.label}</Text>
         </Pressable>
       </Link>
     );
   }
 
   return (
-    <Pressable style={styles[variant]} onPress={onPress}>
-      <Text style={styles[variant + "Text"]}>{label}</Text>
+    <Pressable
+      style={[styles[props.variant], props.style]}
+      onPress={props.onPress}
+    >
+      <Text style={styles[props.variant + "Text"]}>{props.label}</Text>
     </Pressable>
   );
 }
