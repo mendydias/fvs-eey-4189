@@ -1,22 +1,31 @@
-import { Pressable, StyleSheet, Text, TextInput, View } from "react-native";
-import HeaderOne from "./components/HeaderOne";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import Heading from "./components/Heading";
+import FormInput from "./components/FormInput";
+import { useState } from "react";
 
 export default function App() {
+  const [nic, onNicChange] = useState("");
+  const [password, onPasswordChange] = useState("");
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
-        <HeaderOne text="FVS" />
-        <Text>Welcome!</Text>
+        <Heading text="FVS" />
+        <Heading text="Welcome!" level={2} />
       </View>
       <View style={styles.main}>
-        <View style={styles.inputContainer}>
-          <Text>NIC/Email</Text>
-          <TextInput />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text>Password</Text>
-          <TextInput />
-        </View>
+        <FormInput
+          label="NIC/Email"
+          value={nic}
+          onValueChange={onNicChange}
+          inputMode="email"
+        />
+        <FormInput
+          label="Password"
+          value={password}
+          onValueChange={onPasswordChange}
+          secure={true}
+        />
       </View>
       <View style={styles.footer}>
         <Pressable>
