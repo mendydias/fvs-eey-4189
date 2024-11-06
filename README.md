@@ -14,6 +14,7 @@ Welcome to the Fingerprint Voting System (FVS) GitHub repository. This project a
 
   - Registration Number: 221426574
   - S-Number: s92066574
+  - Email: pamodabeyrathna@gmail.com / s92066574@ousl.lk
 
 - **G.D.D Senath**
 
