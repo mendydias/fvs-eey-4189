@@ -3,8 +3,8 @@ import './CandidateProfiles.css';
 
 function CandidateProfiles() {
   const [profiles, setProfiles] = useState([
-    { candidate_id: 1, fullname: 'John Doe', address: '123 Main St', phone_no: '123-456-7890' },
-    { candidate_id: 2, fullname: 'Jane Smith', address: '456 Elm St', phone_no: '987-654-3210' }
+    { candidate_id: 1, fullname: 'John', address: 'Main St', phone_no: '123' },
+    { candidate_id: 2, fullname: 'Alice', address: 'nice St', phone_no: '987' }
   ]);
   const [newProfile, setNewProfile] = useState({ candidate_id: '', fullname: '', address: '', phone_no: '' });
   const [editingIndex, setEditingIndex] = useState(null);
