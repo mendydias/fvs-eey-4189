@@ -5,16 +5,19 @@ Welcome to the Fingerprint Voting System (FVS) GitHub repository. This project a
 ## Team Members
 
 - **D.A.T.M Abenayaka**
+
   - Registration Number: 219213375
   - S-Number: s19004189
   - Email: tharakamihiran55@gmail.com / s19004189@ousl.lk
 
 - **P.M Abeyrathna**
+
   - Registration Number: 221426574
   - S-Number: s92066574
   - Email: pamodabeyrathna@gmail.com / s92066574@ousl.lk
 
 - **G.D.D Senath**
+
   - Registration Number: 222515500
   - S-Number: s22009991
 
