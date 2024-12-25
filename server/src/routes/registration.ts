@@ -1,6 +1,7 @@
 import express from "express";
 import Voter from "../models/registration";
 import { createLogger, format, transports } from "winston";
+import config from "../bootstrap";
 
 const { combine, label, json, timestamp } = format;
 
@@ -13,10 +14,10 @@ const logger = createLogger({
   ),
   transports: [
     new transports.File({
-      filename: "/var/log/4189.error.log",
+      filename: config.logPaths.errorLogPath,
       level: "error",
     }),
-    new transports.File({ filename: "/var/log/4189.combined.log" }),
+    new transports.File({ filename: config.logPaths.combiLogPath }),
     new transports.Console(),
   ],
 });
