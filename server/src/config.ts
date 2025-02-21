@@ -1,3 +1,7 @@
+/**
+ * @module Application configuration will be loaded from the environment and we will give it some sane defaults if environment variables are not set.
+ * @author: Umendya Dias
+ */
 import { configDotenv } from "dotenv";
 import * as winston from "winston";
 import { mkdirSync, existsSync } from "fs";

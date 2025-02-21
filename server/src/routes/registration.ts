@@ -1,7 +1,10 @@
+/**
+ * @module Registration endpoints for basic crud.
+ */
 import express from "express";
 import Voter from "../models/registration";
 import repo from "../repositories/registration";
-import config from "../bootstrap";
+import config from "../config";
 
 const router = express.Router();
 const { logger } = config;

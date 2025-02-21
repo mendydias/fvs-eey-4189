@@ -1,3 +1,6 @@
+/**
+ * @module Typechecked voter model
+ */
 import { z } from "zod";
 
 const Voter = z.object({

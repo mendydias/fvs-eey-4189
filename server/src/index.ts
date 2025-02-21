@@ -1,7 +1,7 @@
 import bodyParser from "body-parser";
 import express from "express";
 import helmet from "helmet";
-import config from "./bootstrap";
+import config from "./config";
 import RegistrationRouter from "./routes/registration";
 
 const app = express();

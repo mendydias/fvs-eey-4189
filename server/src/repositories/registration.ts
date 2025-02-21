@@ -1,6 +1,9 @@
+/**
+ * @module Repository abstraction for the data layer.
+ */
 import { Voter } from "src/models/registration";
 import db from "./dbconfig";
-import config from "../bootstrap";
+import config from "../config";
 
 const { logger } = config;
 
