@@ -8,7 +8,6 @@ import {
 import Heading from "../../components/Heading";
 import Typography from "../../components/Typography";
 import Button from "../../components/Button";
-import { MaterialIcons } from "@expo/vector-icons";
 import IconButton from "../../components/IconButton";
 
 export default function ChooseCandidatePage() {
@@ -36,7 +35,8 @@ export default function ChooseCandidatePage() {
         <View style={styles.btnContainer}>
           <Button
             label="Vote"
-            variant="primary"
+            textVariant="primaryText"
+            viewVariant="primary"
             link="/vote/result?status=1&candidate=candidate 1"
           />
         </View>
@@ -48,7 +48,8 @@ export default function ChooseCandidatePage() {
         <View style={styles.btnContainer}>
           <Button
             label="Vote"
-            variant="primary"
+            viewVariant="primary"
+            textVariant="primaryText"
             link="/vote/result?status=0&candidate=candidate 2"
           />
         </View>

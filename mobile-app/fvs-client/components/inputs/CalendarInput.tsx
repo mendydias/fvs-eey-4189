@@ -1,11 +1,26 @@
 import { FontAwesome } from "@expo/vector-icons";
-import { DateTimePickerAndroid } from "@react-native-community/datetimepicker";
+import {
+  DateTimePickerAndroid,
+  DateTimePickerEvent,
+} from "@react-native-community/datetimepicker";
 import { Pressable, StyleSheet, Text } from "react-native";
 
-export default function CalendarInput({ dateValue, onDateChanged }) {
-  const onChange = (_, selectedDate) => {
-    const currentDate = selectedDate;
-    onDateChanged(currentDate);
+type CalendarInputProps = {
+  dateValue: Date;
+  onDateChanged: (date: Date) => void;
+};
+
+export default function CalendarInput({
+  dateValue,
+  onDateChanged,
+}: CalendarInputProps) {
+  const onChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
+    if (selectedDate == undefined) {
+      //default behavior is to set the current date.
+      onDateChanged(new Date());
+    } else {
+      onDateChanged(selectedDate);
+    }
   };
 
   const showDatePicker = () =>

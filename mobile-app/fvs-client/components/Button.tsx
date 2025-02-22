@@ -1,13 +1,29 @@
 import { Link } from "expo-router";
-import { Pressable, StyleSheet, Text } from "react-native";
+import {
+  GestureResponderEvent,
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+} from "react-native";
 
-export default function Button(props) {
+type ButtonProps = {
+  link?: string;
+  style?: StyleProp<TextStyle>;
+  viewVariant: "primary" | "secondary";
+  textVariant: "primaryText" | "secondaryText";
+  label: string;
+  onPress?: (event: GestureResponderEvent) => void;
+};
+
+export default function Button(props: ButtonProps) {
   console.log(styles);
   if (props.link !== null && props.link !== undefined && props.link !== "") {
     return (
       <Link href={props.link} asChild style={props.style}>
-        <Pressable style={styles[props.variant]}>
-          <Text style={styles[props.variant + "Text"]}>{props.label}</Text>
+        <Pressable style={styles[props.viewVariant]}>
+          <Text style={styles[props.textVariant]}>{props.label}</Text>
         </Pressable>
       </Link>
     );
@@ -15,10 +31,10 @@ export default function Button(props) {
 
   return (
     <Pressable
-      style={[styles[props.variant], props.style]}
+      style={[styles[props.viewVariant], props.style]}
       onPress={props.onPress}
     >
-      <Text style={styles[props.variant + "Text"]}>{props.label}</Text>
+      <Text style={styles[props.textVariant]}>{props.label}</Text>
     </Pressable>
   );
 }

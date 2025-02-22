@@ -1,6 +1,11 @@
 import { StyleSheet, Text } from "react-native";
 
-export default function Heading({ text, level }) {
+type HeadingProps = {
+  text: string;
+  level?: number;
+};
+
+export default function Heading({ text, level }: HeadingProps) {
   let levelStyle;
   switch (level) {
     case 2:

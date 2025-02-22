@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, View } from "react-native";
+import { SafeAreaView, StyleSheet, View } from "react-native";
 import Button from "../../components/Button";
 import Heading from "../../components/Heading";
 import CustomSelect from "../../components/inputs/CustomSelect";
@@ -33,12 +33,16 @@ export default function RegisterDetailsPage() {
           value={nic}
           onValueChange={onNicChange}
           inputMode="text"
+          mode="text"
+          secure={false}
         />
         <FormInput
           label="Full name"
           value={fullname}
           onValueChange={onNameChange}
           inputMode="text"
+          mode="text"
+          secure={false}
         />
         <FormInput
           label="Date of birth"
@@ -57,10 +61,13 @@ export default function RegisterDetailsPage() {
           value={email}
           onValueChange={onEmailChange}
           inputMode="email"
+          mode="text"
+          secure={false}
         />
         <Button
           label="Register!"
-          variant="primary"
+          viewVariant="primary"
+          textVariant="primaryText"
           style={{ marginTop: 44 }}
           onPress={registerDetails}
         />

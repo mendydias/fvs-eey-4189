@@ -25,17 +25,30 @@ export default function LoginPage() {
           value={nic}
           onValueChange={onNicChange}
           inputMode="email"
+          mode="text"
+          secure={false}
         />
         <FormInput
           label="Password"
           value={password}
           onValueChange={onPasswordChange}
+          mode="text"
           secure={true}
         />
       </View>
       <View style={styles.footer}>
-        <Button variant="primary" label="Login" onPress={login} />
-        <Button variant="secondary" label="Register" link="/register/details" />
+        <Button
+          viewVariant="primary"
+          textVariant="primaryText"
+          label="Login"
+          onPress={login}
+        />
+        <Button
+          viewVariant="secondary"
+          textVariant="secondaryText"
+          label="Register"
+          link="/register/details"
+        />
       </View>
     </View>
   );

@@ -1,6 +1,10 @@
 import { StyleSheet, Text } from "react-native";
 
-export default function Typography({ children }) {
+type TypographyProps = {
+  children: string | string[];
+};
+
+export default function Typography({ children }: TypographyProps) {
   return <Text style={styles.txt}>{children}</Text>;
 }
 

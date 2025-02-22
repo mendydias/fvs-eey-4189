@@ -22,11 +22,16 @@ export default function ResultPage() {
       </View>
       <View style={{ flex: 1 }}>
         <Typography>
-          Your vote for {params.candidate} {status === 0 ? "has" : "was"}
+          Your vote for {params.candidate[0]} {status === 0 ? "has" : "was"}
         </Typography>
         <Heading text={statusMsg + "!"} />
         <View style={styles.btnContainer}>
-          <Button variant="primary" label="Exit" link="/vote/choose" />
+          <Button
+            viewVariant="primary"
+            textVariant="primaryText"
+            label="Exit"
+            link="/vote/choose"
+          />
         </View>
       </View>
     </View>

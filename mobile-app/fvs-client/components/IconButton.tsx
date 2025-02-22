@@ -1,8 +1,13 @@
 import { MaterialIcons } from "@expo/vector-icons";
 import { Link } from "expo-router";
-import { Pressable } from "react-native";
+import { Pressable, StyleProp, TextStyle } from "react-native";
 
-export default function IconButton({ link, style }) {
+type IconButtonProps = {
+  link: string;
+  style: StyleProp<TextStyle>;
+};
+
+export default function IconButton({ link, style }: IconButtonProps) {
   return (
     <Link href={link} asChild style={style}>
       <Pressable>

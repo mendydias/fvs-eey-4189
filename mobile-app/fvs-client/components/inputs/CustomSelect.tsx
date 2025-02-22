@@ -1,6 +1,18 @@
 import { Pressable, StyleSheet, Text, View } from "react-native";
 
-export default function CustomSelect({ options, current, onChange, label }) {
+type CustomSelectProps = {
+  options: string[];
+  current: string;
+  onChange: (option: string) => void;
+  label: string;
+};
+
+export default function CustomSelect({
+  options,
+  current,
+  onChange,
+  label,
+}: CustomSelectProps) {
   return (
     <View style={styles.selectWrapper}>
       <Text style={{ marginBottom: 4 }}>{label}</Text>
