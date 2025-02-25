@@ -1,11 +1,10 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
 import config from "../config";
+import { DuplicateKeyError } from "./errors";
 
-const { logger } = config;
+const { logger, database_uri } = config;
 
-const connectionString = "mongodb://ranadmin:ranmal123@localhost:27017";
-
-const client = new MongoClient(connectionString, {
+const client = new MongoClient(database_uri, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
@@ -15,10 +14,23 @@ const client = new MongoClient(connectionString, {
 
 const db = client.db("fvs");
 
-async function save(collection: string, entity: any, _: any): Promise<any> {
-  let result = await db.collection(collection).insertOne(entity);
-  logger?.debug(result.insertedId);
-  return result.insertedId;
+async function save(
+  collection: string,
+  entity: any,
+  entityId: any,
+): Promise<any> {
+  try {
+    let result = await db
+      .collection(collection)
+      .insertOne({ _id: entityId, ...entity });
+    logger?.debug(result.insertedId);
+    return result.insertedId;
+  } catch (error: any) {
+    logger?.error(error);
+    if (error.code === 11000) {
+      throw new DuplicateKeyError(entityId);
+    }
+  }
 }
 
 export default {

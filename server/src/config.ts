@@ -19,6 +19,7 @@ type LoggingPaths = {
 
 type FVSConfig = {
   network: NetworkConfig;
+  database_uri: string;
   logPaths: LoggingPaths;
   logger: winston.Logger | undefined;
 };
@@ -33,6 +34,7 @@ let fvsConfig: FVSConfig = {
     errorLogPath: "",
   },
   logger: undefined,
+  database_uri: "",
 };
 
 // Load all the needed environment variables.
@@ -109,5 +111,13 @@ const logger = winston.createLogger({
   ],
 });
 fvsConfig.logger = logger;
+
+if (process.env.FVS_DB_URI !== undefined) {
+  fvsConfig.database_uri = process.env.FVS_DB_URI;
+} else {
+  throw new Error(
+    "Cannot start server without specifying database connection url",
+  );
+}
 
 export default fvsConfig;

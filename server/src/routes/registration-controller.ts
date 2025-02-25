@@ -2,9 +2,10 @@
  * @module Registration endpoints for basic crud.
  */
 import express from "express";
-import Voter from "../models/registration";
+import Voter from "../models/registration-models";
 import repo from "../repositories/registration-repository";
 import config from "../config";
+import { DuplicateKeyError } from "../repositories/errors";
 
 const router = express.Router();
 const { logger } = config;
@@ -35,13 +36,18 @@ router.post("/voter", async (req, res) => {
     } catch (e: any) {
       // This is thrown by the repo if there is an error with the underlying database trying to save data.
       logger?.error("Sending error response back.");
+      logger?.error(`Error message: ${e.message}`);
 
-      res.status(500).json({
-        message: "Unable to save voter details",
-        details: {
-          errors: e.message,
-        },
-      });
+      if (e instanceof DuplicateKeyError) {
+        res.status(401).json({
+          message: "Already registered. Please login!",
+        });
+      } else {
+        res.status(500).json({
+          message:
+            "Unable to save voter details. Please contact admin and check logs.",
+        });
+      }
     }
   } else {
     logger?.debug(
@@ -50,10 +56,8 @@ router.post("/voter", async (req, res) => {
     logger?.error(result.error.issues);
 
     res.status(400).json({
-      message: "Failed to register voter",
-      details: {
-        errors: result.error.issues,
-      },
+      message:
+        "Failed to register voter. Voter request body malformed. Please contact the admin.",
     });
   }
 });

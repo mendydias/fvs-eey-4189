@@ -1,7 +1,7 @@
 /**
  * @module Repository abstraction for the data layer.
  */
-import { Voter } from "src/models/registration";
+import { Voter } from "../models/registration-models";
 import config from "../config";
 import configureDatabase from "./db";
 
