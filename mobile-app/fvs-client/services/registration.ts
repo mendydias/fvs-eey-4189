@@ -14,11 +14,23 @@ async function registerVoter(voter: Voter) {
     endpoints.base +
     endpoints.port +
     endpoints.services.registration.createVoter;
-  await fetch(url, {
-    headers: {
-     "content" :
+  try {
+    let response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(voter),
+    });
+    if (!response.ok) {
+      console.log(`Response status: ${response.status}`);
     }
-  });
+
+    let json = await response.json();
+    console.log(json);
+  } catch (error) {
+    console.log(error);
+  }
 }
 
 export default {

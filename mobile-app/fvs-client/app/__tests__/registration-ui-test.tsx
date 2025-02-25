@@ -18,4 +18,5 @@ describe("Basic user registration flow", function () {
     await driver.press(registerBtn);
     expect(screen).toHavePathname("/register/details");
   });
+  it("completing and submitting the registration form should save the voter correctly.", async function () {});
 });
