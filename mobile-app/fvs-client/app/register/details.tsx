@@ -6,7 +6,7 @@ import CustomSelect from "@/components/inputs/CustomSelect";
 import FormInput from "@/components/inputs/FormInput";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
-import { GENDERS } from "@/models/user";
+import { GENDERS } from "@/models/voter";
 
 export default function RegisterDetailsPage() {
   const [nic, onNicChange] = useState("");
