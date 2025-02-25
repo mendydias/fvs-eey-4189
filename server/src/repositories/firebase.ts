@@ -1,6 +1,9 @@
 // From firebase docs:
 // https://firebase.google.com/docs/firestore/quickstart#node.js
 
+import config from "src/config";
+
+// Setup firebase
 const {
   initializeApp,
   applicationDefault,
@@ -21,4 +24,18 @@ initializeApp({
 
 const db = getFirestore();
 
-export default db;
+// utility functions
+async function save(collection: string, entity: any, entityId: any) {
+  const entityRef = db.collection(collection).doc(entityId);
+  try {
+    await entityRef.set(entity);
+  } catch (e: any) {
+    config.logger?.error(e);
+    throw e;
+  }
+  return entityId;
+}
+
+export default {
+  save,
+};

@@ -3,7 +3,7 @@
  */
 import express from "express";
 import Voter from "../models/registration";
-import repo from "../repositories/registration";
+import repo from "../repositories/registration-repository";
 import config from "../config";
 
 const router = express.Router();

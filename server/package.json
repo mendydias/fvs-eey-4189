@@ -4,7 +4,7 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc --project tsconfig.json && tsc-alias tsconfig.json",
-    "dev": "nodemon -r tsconfig-paths/register src/index.ts"
+    "dev": "nodemon -r src/index.ts"
   },
   "keywords": [],
   "author": "",
@@ -16,6 +16,7 @@
     "express": "^4.21.2",
     "firebase-admin": "^13.0.2",
     "helmet": "^8.0.0",
+    "mongodb": "^6.13.1",
     "tsconfig-paths": "^4.2.0",
     "winston": "^3.17.0",
     "zod": "^3.24.1"
