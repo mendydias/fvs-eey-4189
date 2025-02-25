@@ -1,15 +1,14 @@
 import { useState } from "react";
 import { SafeAreaView, StyleSheet, View } from "react-native";
-import Button from "../../components/Button";
-import Heading from "../../components/Heading";
-import CustomSelect from "../../components/inputs/CustomSelect";
-import FormInput from "../../components/inputs/FormInput";
+import Button from "@/components/Button";
+import Heading from "@/components/Heading";
+import CustomSelect from "@/components/inputs/CustomSelect";
+import FormInput from "@/components/inputs/FormInput";
 import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
+import { GENDERS } from "@/models/user";
 
 export default function RegisterDetailsPage() {
-  const GENDERS = ["Male", "Female"];
-
   const [nic, onNicChange] = useState("");
   const [fullname, onNameChange] = useState("");
   const [dob, onDobChange] = useState(new Date());

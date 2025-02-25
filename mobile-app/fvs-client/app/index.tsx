@@ -21,7 +21,7 @@ export default function LoginPage() {
       </View>
       <View style={styles.main}>
         <FormInput
-          label="NIC/Email"
+          label="NIC"
           value={nic}
           onValueChange={onNicChange}
           inputMode="email"

@@ -18,7 +18,6 @@ type ButtonProps = {
 };
 
 export default function Button(props: ButtonProps) {
-  console.log(styles);
   if (props.link !== null && props.link !== undefined && props.link !== "") {
     return (
       <Link href={props.link} asChild style={props.style}>
@@ -33,6 +32,7 @@ export default function Button(props: ButtonProps) {
     <Pressable
       style={[styles[props.viewVariant], props.style]}
       onPress={props.onPress}
+      role="button"
     >
       <Text style={styles[props.textVariant]}>{props.label}</Text>
     </Pressable>
