@@ -2,7 +2,7 @@ import bodyParser from "body-parser";
 import express from "express";
 import helmet from "helmet";
 import config from "./config";
-import RegistrationRouter from "./routes/registration";
+import RegistrationRouter from "./routes/registration-controller";
 
 const app = express();
 

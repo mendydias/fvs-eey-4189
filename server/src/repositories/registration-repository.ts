@@ -21,7 +21,7 @@ type VoterRepository = {
 const VOTERS = "voters";
 
 async function save(voter: Voter): Promise<string> {
-  logger?.debug(`Saving ${voter} to database.`);
+  logger?.debug(`Saving ${voter.nic}:${voter.fullname} to database.`);
   return db.save(VOTERS, voter, voter.nic);
 }
 
