@@ -28,6 +28,7 @@ export default function RegisterDetailsPage() {
       </View>
       <View style={styles.main}>
         <FormInput
+          testId="nic"
           label="National Identification Number"
           value={nic}
           onValueChange={onNicChange}
@@ -36,6 +37,7 @@ export default function RegisterDetailsPage() {
           secure={false}
         />
         <FormInput
+          testId="fullname"
           label="Full name"
           value={fullname}
           onValueChange={onNameChange}
@@ -44,18 +46,21 @@ export default function RegisterDetailsPage() {
           secure={false}
         />
         <FormInput
+          testId="dob"
           label="Date of birth"
           value={dob}
           onValueChange={onDobChange}
           mode="date"
         />
         <CustomSelect
+          testId="gender"
           options={GENDERS}
           current={gender}
           onChange={onGenderChange}
           label="Gender"
         />
         <FormInput
+          testId="email"
           label="Email address"
           value={email}
           onValueChange={onEmailChange}

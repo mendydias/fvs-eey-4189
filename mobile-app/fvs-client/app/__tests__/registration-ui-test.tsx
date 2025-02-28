@@ -23,6 +23,7 @@ describe("Basic user registration flow", function () {
     renderRouter(routes, { initialUrl: "/register/details" });
     // get the field elements
     const driver = userEvent.setup();
+    // TODO: change the queries to get by test id
     const nicField = screen.getByRole("text", {
       name: "National Identification Number",
     });
@@ -38,7 +39,16 @@ describe("Basic user registration flow", function () {
       fullname: "Umendya Ranmal Dias",
       dob: new Date("1994-07-17"),
       email: "u.ranmal.dias@gmail.com",
-      gender: 
+      gender: GENDERS[0],
     };
+    // input the voter
+    driver.type(nicField, voter.nic);
+    driver.type(nameField, voter.fullname);
+    driver.type(dobField, voter.dob.toTimeString());
+    driver.type(genderField, voter.gender);
+    driver.type(emailField, voter.email);
+    driver.press(registerButton);
+    // success message is displayed
+    screen.getByText("Successfully registered!");
   });
 });

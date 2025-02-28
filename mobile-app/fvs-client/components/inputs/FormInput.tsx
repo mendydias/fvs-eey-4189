@@ -13,6 +13,7 @@ type StringConsumer = (value: string) => void;
 type DateConsumer = (date: Date) => void;
 
 type DateFormInputProps = {
+  testId: string;
   mode: "date";
   label: string;
   onValueChange: DateConsumer;
@@ -20,6 +21,7 @@ type DateFormInputProps = {
 };
 
 type TextFormInputProps = {
+  testId: string;
   mode: "text";
   label: string;
   value: string;
@@ -36,6 +38,7 @@ export default function FormInput(props: FormInputProps) {
       <View style={styles.formField}>
         <Text style={styles.textLabel}>{props.label}</Text>
         <CalendarInput
+          testId={props.testId}
           onDateChanged={props.onValueChange}
           dateValue={props.value}
         />
@@ -47,6 +50,7 @@ export default function FormInput(props: FormInputProps) {
       <View style={styles.formField}>
         <Text style={styles.textLabel}>{props.label}</Text>
         <TextInput
+          testID={props.testId}
           style={styles.input}
           value={props.value}
           onChange={(e: NativeSyntheticEvent<TextInputChangeEventData>) =>
