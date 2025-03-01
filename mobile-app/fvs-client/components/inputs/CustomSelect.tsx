@@ -5,7 +5,6 @@ type CustomSelectProps = {
   current: string;
   onChange: (option: string) => void;
   label: string;
-  testId: string;
 };
 
 export default function CustomSelect({
@@ -13,7 +12,6 @@ export default function CustomSelect({
   current,
   onChange,
   label,
-  testId,
 }: CustomSelectProps) {
   return (
     <View style={styles.selectWrapper}>
@@ -32,7 +30,6 @@ export default function CustomSelect({
             style={
               option === current ? { color: "#fff" } : { color: "#2D3648" }
             }
-            testID={testId}
           >
             {option}
           </Text>

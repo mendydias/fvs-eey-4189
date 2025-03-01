@@ -8,13 +8,11 @@ import { Pressable, StyleSheet, Text } from "react-native";
 type CalendarInputProps = {
   dateValue: Date;
   onDateChanged: (date: Date) => void;
-  testId: string;
 };
 
 export default function CalendarInput({
   dateValue,
   onDateChanged,
-  testId,
 }: CalendarInputProps) {
   const onChange = (_: DateTimePickerEvent, selectedDate?: Date) => {
     if (selectedDate == undefined) {
@@ -33,11 +31,7 @@ export default function CalendarInput({
     });
 
   return (
-    <Pressable
-      testID={testId}
-      style={styles.formInput}
-      onPress={showDatePicker}
-    >
+    <Pressable style={styles.formInput} onPress={showDatePicker}>
       <Text>
         {dateValue.getDate()} - {dateValue.getMonth() + 1} -{" "}
         {dateValue.getFullYear()}

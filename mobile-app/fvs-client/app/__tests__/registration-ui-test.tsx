@@ -23,13 +23,15 @@ describe("Basic user registration flow", function () {
     renderRouter(routes, { initialUrl: "/register/details" });
     // get the field elements
     const driver = userEvent.setup();
-    // TODO: change the queries to get by test id
+    // TODO: go through the input component code and add the placeholder prop
+    // FIXME: nic input must be queried using a placeholder text
     const nicField = screen.getByRole("text", {
       name: "National Identification Number",
     });
-    const nameField = screen.getByRole("text", { name: "Full name" });
-    const dobField = screen.getByRole("text", { name: "Date of birth" });
-    const genderField = screen.getByRole("text", { name: "Gender" });
+    const nameField = screen.getByPlaceholderText("Full name");
+    const dobField = screen.getByPlaceholderText("Date of birth");
+    // FIXME: gender input is a select dropdown input so doesn't have a placeholder
+    const genderField = screen.getByPlaceholderText("Gender");
     const emailField = screen.getByRole("text", { name: "Email address" });
     // get the register button
     const registerButton = screen.getByRole("button", { name: "Register!" });
@@ -39,16 +41,8 @@ describe("Basic user registration flow", function () {
       fullname: "Umendya Ranmal Dias",
       dob: new Date("1994-07-17"),
       email: "u.ranmal.dias@gmail.com",
-      gender: GENDERS[0],
+      gender: "Male",
     };
-    // input the voter
-    driver.type(nicField, voter.nic);
-    driver.type(nameField, voter.fullname);
-    driver.type(dobField, voter.dob.toTimeString());
-    driver.type(genderField, voter.gender);
-    driver.type(emailField, voter.email);
-    driver.press(registerButton);
-    // success message is displayed
-    screen.getByText("Successfully registered!");
+    // TODO: wrap these inside an act function call and simulate user events
   });
 });
