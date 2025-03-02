@@ -28,4 +28,8 @@ describe("<LoginPage />", () => {
     await user.press(screen.getByRole("link", { name: "Register" }));
     expect(screen).toHavePathname("/register/details");
   });
+
+  // TODO: test empty input fields cause a validation error message
+  // TODO: test wrong credentials cause an error message
+  // TODO: test correct credentials cause a success message and redirect to the dashboard
 });
