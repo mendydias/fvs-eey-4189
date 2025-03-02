@@ -17,6 +17,7 @@ type DateFormInputProps = {
   label: string;
   onValueChange: DateConsumer;
   value: Date;
+  ariaLabel: string;
 };
 
 type TextFormInputProps = {
@@ -26,6 +27,7 @@ type TextFormInputProps = {
   onValueChange: StringConsumer;
   secure: boolean;
   inputMode?: InputModeOptions;
+  placeholder: string;
 };
 
 type FormInputProps = DateFormInputProps | TextFormInputProps;
@@ -38,6 +40,7 @@ export default function FormInput(props: FormInputProps) {
         <CalendarInput
           onDateChanged={props.onValueChange}
           dateValue={props.value}
+          ariaLabel={props.ariaLabel}
         />
       </View>
     );
@@ -54,6 +57,7 @@ export default function FormInput(props: FormInputProps) {
           }
           secureTextEntry={props.secure}
           inputMode={props.inputMode}
+          placeholder={props.placeholder}
         />
       </View>
     );

@@ -21,7 +21,8 @@ export default function LoginPage() {
       </View>
       <View style={styles.main}>
         <FormInput
-          label="NIC"
+          placeholder="NIC"
+          label="National Identification Card number"
           value={nic}
           onValueChange={onNicChange}
           inputMode="email"
@@ -29,6 +30,7 @@ export default function LoginPage() {
           secure={false}
         />
         <FormInput
+          placeholder="Password"
           label="Password"
           value={password}
           onValueChange={onPasswordChange}

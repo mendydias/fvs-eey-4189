@@ -7,13 +7,13 @@
     "android": "expo start --android",
     "ios": "expo start --ios",
     "web": "expo start --web",
-    "test": "jest --watchAll"
+    "test": "jest"
   },
   "dependencies": {
     "@expo/vector-icons": "^14.0.3",
     "@react-native-community/datetimepicker": "8.2.0",
     "@types/react": "~18.3.12",
-    "expo": "^52.0.0",
+    "expo": "^52.0.37",
     "expo-constants": "~17.0.7",
     "expo-linking": "~7.0.5",
     "expo-router": "~4.0.17",

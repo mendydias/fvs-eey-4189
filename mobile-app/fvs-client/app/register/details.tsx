@@ -1,10 +1,9 @@
-import { useState } from "react";
+import React, { useState } from "react";
 import { SafeAreaView, StyleSheet, View } from "react-native";
 import Button from "@/components/Button";
 import Heading from "@/components/Heading";
 import CustomSelect from "@/components/inputs/CustomSelect";
 import FormInput from "@/components/inputs/FormInput";
-import { router } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { GENDERS } from "@/models/voter";
 
@@ -16,8 +15,7 @@ export default function RegisterDetailsPage() {
   const [email, onEmailChange] = useState("");
 
   const registerDetails = () => {
-    alert("Successfully registered!");
-    router.replace("/");
+    console.log(`Registered: ${nic}, ${fullname}, ${dob}, ${gender}, ${email}`);
   };
 
   return (
@@ -28,8 +26,8 @@ export default function RegisterDetailsPage() {
       </View>
       <View style={styles.main}>
         <FormInput
-          testId="nic"
           label="National Identification Number"
+          placeholder="NIC"
           value={nic}
           onValueChange={onNicChange}
           inputMode="text"
@@ -37,7 +35,7 @@ export default function RegisterDetailsPage() {
           secure={false}
         />
         <FormInput
-          testId="fullname"
+          placeholder="Full name"
           label="Full name"
           value={fullname}
           onValueChange={onNameChange}
@@ -46,21 +44,20 @@ export default function RegisterDetailsPage() {
           secure={false}
         />
         <FormInput
-          testId="dob"
           label="Date of birth"
           value={dob}
           onValueChange={onDobChange}
           mode="date"
+          ariaLabel="Date of birth"
         />
         <CustomSelect
-          testId="gender"
           options={GENDERS}
           current={gender}
           onChange={onGenderChange}
           label="Gender"
         />
         <FormInput
-          testId="email"
+          placeholder="Email address"
           label="Email address"
           value={email}
           onValueChange={onEmailChange}
