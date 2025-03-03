@@ -1,5 +1,6 @@
 import { render, screen, userEvent } from "expo-router/testing-library";
 import RegisterDetailsPage from "@/app/register/details";
+import { press } from "@testing-library/react-native/build/user-event/press";
 
 jest.mock("expo-font");
 jest.mock("@expo/vector-icons");
@@ -70,6 +71,18 @@ describe("<RegisterDetailsPage />", function () {
   });
 
   // TODO: test empty text input fields cause validation errors
+  it("should display error messages if input fields are empty when pressing register button", async function () {
+    render(<RegisterDetailsPage />);
+    // the default behavior should render an empty form
+    // locate the register button and press it
+    const registerButton = screen.getByText("Register!");
+    const user = userEvent.setup();
+    await user.press(registerButton);
+    // validation messages should be present
+    expect(screen.getByText("Enter a valid NIC number")).toBeTruthy();
+    expect(screen.getByText("Enter a valid email address")).toBeTruthy();
+    expect(screen.getByText("Your name cannot be empty")).toBeTruthy();
+  });
   // TODO: test wrong email format causes a validation error
   // TODO: test correct details calls the register function redirects to create password page
 });
