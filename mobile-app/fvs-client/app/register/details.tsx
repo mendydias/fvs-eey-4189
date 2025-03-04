@@ -15,7 +15,7 @@ export default function RegisterDetailsPage() {
   const [email, onEmailChange] = useState("");
 
   const registerDetails = () => {
-    console.log(`Registered: ${nic}, ${fullname}, ${dob}, ${gender}, ${email}`);
+    // TODO: implement registration logic
   };
 
   return (

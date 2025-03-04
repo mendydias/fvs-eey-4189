@@ -70,7 +70,6 @@ describe("<RegisterDetailsPage />", function () {
     );
   });
 
-  // TODO: test empty text input fields cause validation errors
   it("should display error messages if input fields are empty when pressing register button", async function () {
     render(<RegisterDetailsPage />);
     // the default behavior should render an empty form
@@ -79,10 +78,27 @@ describe("<RegisterDetailsPage />", function () {
     const user = userEvent.setup();
     await user.press(registerButton);
     // validation messages should be present
-    expect(screen.getByText("Enter a valid NIC number")).toBeTruthy();
-    expect(screen.getByText("Enter a valid email address")).toBeTruthy();
+    expect(screen.getByText("Your NIC cannot be empty")).toBeTruthy();
+    expect(screen.getByText("Your email address cannot be empty")).toBeTruthy();
     expect(screen.getByText("Your name cannot be empty")).toBeTruthy();
   });
-  // TODO: test wrong email format causes a validation error
+
+  it("should display error message if email is in the wrong format", async function () {
+    render(<RegisterDetailsPage />);
+    // cannot leave fields empty, so we query and type in the other fields.
+    const nic = screen.getByPlaceholderText("NIC");
+    const fullname = screen.getByPlaceholderText("Full name");
+    const email = screen.getByPlaceholderText("Email address");
+    const registerButton = screen.getByText("Register!");
+    const user = userEvent.setup();
+    await user.type(nic, voter.nic);
+    await user.type(fullname, voter.fullname);
+    // type an invalid email address
+    await user.type(email, "john.smith05@kmail");
+    await user.press(registerButton);
+    // test error message is displayed
+    expect(screen.getByText("Enter a valid email address")).toBeTruthy();
+  });
   // TODO: test correct details calls the register function redirects to create password page
+  it("should redirect to create password page if all details are correct", async function () {});
 });
