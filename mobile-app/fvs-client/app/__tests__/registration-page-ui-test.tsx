@@ -94,7 +94,7 @@ describe("<RegisterDetailsPage />", function () {
     await user.type(nic, voter.nic);
     await user.type(fullname, voter.fullname);
     // type an invalid email address
-    await user.type(email, "john.smith05@kmail");
+    await user.type(email, "sdfsfd");
     await user.press(registerButton);
     // test error message is displayed
     expect(screen.getByText("Enter a valid email address")).toBeTruthy();
