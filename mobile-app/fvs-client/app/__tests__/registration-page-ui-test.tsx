@@ -1,6 +1,17 @@
-import { render, screen, userEvent } from "expo-router/testing-library";
+/**
+ * @module RegistrationPageUITest
+ * @description This module contains UI tests for the Registration Page.
+ * It verifies the user interface elements and interactions on the registration page.
+ */
+import {
+  render,
+  renderRouter,
+  screen,
+  userEvent,
+} from "expo-router/testing-library";
 import RegisterDetailsPage from "@/app/register/details";
-import { press } from "@testing-library/react-native/build/user-event/press";
+import RegisterPasswordPage from "@/app/register/password";
+import LoginPage from "..";
 
 jest.mock("expo-font");
 jest.mock("@expo/vector-icons");
@@ -99,6 +110,46 @@ describe("<RegisterDetailsPage />", function () {
     // test error message is displayed
     expect(screen.getByText("Enter a valid email address")).toBeTruthy();
   });
-  // TODO: test correct details calls the register function redirects to create password page
-  it("should redirect to create password page if all details are correct", async function () {});
+  it("should redirect to create password page if all details are correct", async function () {
+    // setup router
+    renderRouter(
+      {
+        index: jest.fn(() => <LoginPage />),
+        "/register/details": jest.fn(() => <RegisterDetailsPage />),
+        "/register/password": jest.fn(() => <RegisterPasswordPage />),
+      },
+      { initialUrl: "/register/details" },
+    );
+    // fill in the form
+    const nic = screen.getByPlaceholderText("NIC");
+    const fullname = screen.getByPlaceholderText("Full name");
+    const email = screen.getByPlaceholderText("Email address");
+    const registerButton = screen.getByText("Register!");
+    const user = userEvent.setup();
+    await user.type(nic, voter.nic);
+    await user.type(fullname, voter.fullname);
+    await user.type(email, voter.email);
+    await user.press(registerButton);
+    // check if the router redirected to the correct page
+    expect(screen).toHavePathname("/register/password");
+  });
+});
+
+describe("<RegisterPasswordPage />", function () {
+  it("should render everything correctly", function () {
+    render(<RegisterPasswordPage />);
+    expect(screen.getByText("FVS")).toBeTruthy();
+    expect(screen.getByText("Create User Login Credentials")).toBeTruthy();
+    expect(screen.getByText("Create a password to login:")).toBeTruthy();
+    expect(screen.getByText("Password:")).toBeTruthy();
+    expect(screen.getByPlaceholderText("Password")).toBeTruthy();
+    expect(
+      screen.getByText("Type the password again to confirm:"),
+    ).toBeTruthy();
+    expect(screen.getByPlaceholderText("Confirm Password")).toBeTruthy();
+    expect(screen.getByText("Register!")).toBeTruthy();
+  });
+  // TODO: test that empty password fields display error messages
+  // TODO: test that non-matching password field and confirm password field display error message
+  // TODO: test that correct password fields redirect to login page
 });

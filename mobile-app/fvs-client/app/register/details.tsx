@@ -1,13 +1,14 @@
 import React from "react";
 import { SafeAreaView, StyleSheet, View, Text } from "react-native";
 import Button from "@/components/Button";
-import Heading from "@/components/Heading";
 import CustomSelect from "@/components/inputs/CustomSelect";
 import FormInput from "@/components/inputs/FormInput";
 import { StatusBar } from "expo-status-bar";
 import { GENDERS, Voter } from "@/models/voter";
 import * as Yup from "yup";
 import { Formik, FormikProps } from "formik";
+import { FormHeader } from "@/components/FormHeader";
+import { router } from "expo-router";
 
 const initialVoterValues = {
   nic: "",
@@ -17,32 +18,29 @@ const initialVoterValues = {
   email: "",
 };
 
+const voterSchema = Yup.object().shape({
+  nic: Yup.string().required("Your NIC cannot be empty"),
+  fullname: Yup.string().required("Your name cannot be empty"),
+  email: Yup.string()
+    .email("Enter a valid email address")
+    .required("Your email address cannot be empty"),
+});
+
+const registerDetails = (voter: Voter) => {
+  router.replace("/register/password");
+};
+
 export default function RegisterDetailsPage() {
-  const voterSchema = Yup.object().shape({
-    nic: Yup.string().required("Your NIC cannot be empty"),
-    fullname: Yup.string().required("Your name cannot be empty"),
-    email: Yup.string()
-      .email("Enter a valid email address")
-      .required("Your email address cannot be empty"),
-  });
-
-  const registerDetails = (voter: Voter) => {
-    console.log(voter);
-  };
-
   return (
     <SafeAreaView style={styles.container}>
-      <View style={styles.header}>
-        <Heading text="FVS" />
-        <Heading text="User Registration" level={2} />
-      </View>
+      <FormHeader heading="User Registration" />
       <Formik
         initialValues={initialVoterValues}
         validationSchema={voterSchema}
         onSubmit={registerDetails}
       >
         {({
-          handleBlur,
+          handleBlur, // TODO: need to implement this as a prop in the child InputText component
           handleSubmit,
           handleChange,
           values,
@@ -59,6 +57,9 @@ export default function RegisterDetailsPage() {
               mode="text"
               secure={false}
             />
+            {
+              // TODO: Replace this with a custom error message component
+            }
             {errors.nic && touched.nic && <Text>{errors.nic}</Text>}
             <FormInput
               placeholder="Full name"
@@ -115,10 +116,6 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     padding: 8,
-  },
-  header: {
-    width: "100%",
-    marginBottom: 16,
   },
   main: {
     width: "100%",
