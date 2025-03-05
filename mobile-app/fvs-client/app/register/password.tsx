@@ -15,20 +15,20 @@ const initialPasswordValues = {
 
 const passwordSchema = Yup.object().shape({
   password: Yup.string()
-    .min(8, "Password must be at least 8 characters")
-    .max(50, "Password cannot be more than 50 characters")
+    .min(8, "Password is less than 8 characters.")
+    .max(50, "Password is greater than 50 characters.")
     .matches(
       /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/,
-      "Password must contain at least one letter and one number",
+      "Password doesn't contain a mix of letters and numbers.",
     )
-    .required("Password cannot be empty"),
-  confirmPassword: Yup.string().required("Please confirm your password"),
+    .required("Password cannot be empty."),
+  confirmPassword: Yup.string().required("Please confirm your password."),
 });
 
 const validate = (values: Yup.InferType<typeof passwordSchema>) => {
   const errors: { confirmPassword: string | null } = { confirmPassword: null };
   if (values.password !== values.confirmPassword) {
-    errors.confirmPassword = "Passwords do not match";
+    errors.confirmPassword = "Passwords do not match.";
   }
   return errors;
 };

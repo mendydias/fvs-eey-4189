@@ -110,6 +110,7 @@ describe("<RegisterDetailsPage />", function () {
     // test error message is displayed
     expect(screen.getByText("Enter a valid email address")).toBeTruthy();
   });
+
   it("should redirect to create password page if all details are correct", async function () {
     // setup router
     renderRouter(
@@ -153,7 +154,7 @@ describe("<RegisterPasswordPage />", function () {
     const user = userEvent.setup();
     await user.press(registerButton);
     // check for error messages
-    expect(screen.getByText("Password cannot be empty")).toBeTruthy();
+    expect(screen.getByText("Password cannot be empty.")).toBeTruthy();
   });
 
   it("should display error message if passwords do not match", async function () {
@@ -168,7 +169,7 @@ describe("<RegisterPasswordPage />", function () {
     const registerButton = screen.getByText("Register!");
     await user.press(registerButton);
     // check for error messages
-    expect(screen.getByText("Passwords do not match")).toBeTruthy();
+    expect(screen.getByText("Passwords do not match.")).toBeTruthy();
   });
 
   it("should display password requirements on the page", function () {
@@ -183,6 +184,33 @@ describe("<RegisterPasswordPage />", function () {
       screen.getByText("Password must contain at least one number."),
     ).toBeTruthy();
   });
-  // TODO: test that error messages are displayed if password does not meet requirements
+
+  it("should display error message if password doesn't meet the password requirements", async function () {
+    render(<RegisterPasswordPage />);
+    const password = screen.getByPlaceholderText("Password");
+    const registerButton = screen.getByText("Register!");
+    const user = userEvent.setup();
+    const testPassword1 = "secret";
+    await user.type(password, testPassword1);
+    await user.press(registerButton);
+    expect(
+      screen.getByText("Password is less than 8 characters."),
+    ).toBeTruthy();
+    const testPassword2 = "supersecret";
+    await user.type(password, testPassword2);
+    expect(
+      screen.getByText(
+        "Password doesn't contain a mix of letters and numbers.",
+      ),
+    ).toBeTruthy();
+    const testPasswordLong =
+      "1234234sdfsdfsdfsfsdfsdfsdfsfdsdfsfsdfsdfsdfsdfsfsdfsfsfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsdfsfsdfsdfsdfsdfsfsdsfs";
+    await user.clear(password);
+    await user.type(password, testPasswordLong);
+    await user.press(registerButton);
+    expect(
+      screen.getByText("Password is greater than 50 characters."),
+    ).toBeTruthy();
+  });
   // TODO: test that correct password fields redirect to login page
 });
