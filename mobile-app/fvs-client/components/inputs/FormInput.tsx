@@ -8,6 +8,7 @@ import {
   View,
 } from "react-native";
 import CalendarInput from "./CalendarInput";
+import ErrorMessage from "../ErrorMessage";
 
 type StringConsumer = (value: string) => void;
 type DateConsumer = (date: Date) => void;
@@ -28,6 +29,8 @@ type TextFormInputProps = {
   secure: boolean;
   inputMode?: InputModeOptions;
   placeholder: string;
+  instructions?: string[];
+  errorMessage?: string;
 };
 
 type FormInputProps = DateFormInputProps | TextFormInputProps;
@@ -59,6 +62,17 @@ export default function FormInput(props: FormInputProps) {
           inputMode={props.inputMode}
           placeholder={props.placeholder}
         />
+        {props.errorMessage && <ErrorMessage message={props.errorMessage} />}
+        {props.instructions && (
+          <View style={styles.instructionContainer}>
+            <Text style={styles.instructionsHeader}>Instructions:</Text>
+            {props.instructions.map((instruction, index) => (
+              <Text key={index} style={styles.instructionLabel}>
+                {instruction}
+              </Text>
+            ))}
+          </View>
+        )}
       </View>
     );
   }
@@ -66,9 +80,7 @@ export default function FormInput(props: FormInputProps) {
 
 const styles = StyleSheet.create({
   formField: {
-    marginVertical: 4,
     width: 320,
-    height: 72,
     justifyContent: "center",
   },
   textLabel: {
@@ -80,5 +92,20 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 4,
     padding: 8,
+  },
+  instructionContainer: {
+    width: "100%",
+    alignItems: "flex-start",
+    marginTop: 4,
+    marginBottom: 16,
+  },
+  instructionLabel: {
+    color: "#2D3648",
+    fontSize: 8,
+  },
+  instructionsHeader: {
+    color: "#2D3648",
+    fontSize: 8,
+    fontWeight: "bold",
   },
 });

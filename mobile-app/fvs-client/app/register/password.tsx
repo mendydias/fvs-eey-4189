@@ -40,6 +40,7 @@ export default function RegisterPasswordPage() {
       <Formik
         initialValues={initialPasswordValues}
         onSubmit={(values) => console.log(values.password)}
+        validationSchema={passwordSchema}
         validate={validate}
       >
         {({
@@ -59,11 +60,13 @@ export default function RegisterPasswordPage() {
               value={values.password}
               onValueChange={handleChange("password")}
               placeholder="Password"
+              errorMessage={touched.password ? errors.password : undefined}
+              instructions={[
+                "Password must be at least 8 characters.",
+                "Password must contain at least one letter.",
+                "Password must contain at least one number.",
+              ]}
             />
-            {errors.password && touched.password && (
-              <ErrorMessage message={errors.password} />
-            )}
-            <Typography>Type the password again to confirm:</Typography>
             <FormInput
               label="Confirm Password:"
               inputMode="text"
@@ -72,10 +75,10 @@ export default function RegisterPasswordPage() {
               value={values.confirmPassword}
               onValueChange={handleChange("confirmPassword")}
               placeholder="Confirm Password"
+              errorMessage={
+                touched.confirmPassword ? errors.confirmPassword : undefined
+              }
             />
-            {errors.confirmPassword && touched.confirmPassword && (
-              <ErrorMessage message={errors.confirmPassword} />
-            )}
             <Button
               label="Register!"
               viewVariant="primary"

@@ -27,7 +27,7 @@ const voterSchema = Yup.object().shape({
 });
 
 const registerDetails = (voter: Voter) => {
-  router.replace("/register/password");
+  router.push("/register/password");
 };
 
 export default function RegisterDetailsPage() {
@@ -75,7 +75,7 @@ export default function RegisterDetailsPage() {
             )}
             <FormInput
               label="Date of birth"
-              value={values.dob}
+              value={new Date(values.dob)} // Formik stores all form values as strings unless a type is passed
               onValueChange={(date) => handleChange("dob")(date.toDateString())} // HACK: refactor this into a function
               mode="date"
               ariaLabel="Date of birth"

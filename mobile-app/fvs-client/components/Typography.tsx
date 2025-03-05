@@ -5,12 +5,14 @@ type TypographyProps = {
 };
 
 export default function Typography({ children }: TypographyProps) {
-  return <Text style={styles.txt}>{children}</Text>;
+  return <Text style={styles.regular}>{children}</Text>;
 }
 
 const styles = StyleSheet.create({
-  txt: {
+  regular: {
     color: "#2D3648",
     fontSize: 16,
+    marginTop: 16,
+    marginBottom: 4,
   },
 });

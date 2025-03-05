@@ -38,10 +38,7 @@ export default function CalendarInput({
       style={styles.formInput}
       onPress={showDatePicker}
     >
-      <Text>
-        {dateValue.getDate()} - {dateValue.getMonth() + 1} -{" "}
-        {dateValue.getFullYear()}
-      </Text>
+      <Text>{dateValue.toDateString()}</Text>
       <FontAwesome name="calendar" size={20} color="#2D3648" />
     </Pressable>
   );

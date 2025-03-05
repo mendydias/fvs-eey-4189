@@ -17,6 +17,6 @@ export function FormHeader({ heading }: FormHeaderProps) {
 const styles = StyleSheet.create({
   header: {
     width: "100%",
-    marginBottom: 16,
+    marginBottom: 56,
   },
 });

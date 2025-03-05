@@ -143,13 +143,46 @@ describe("<RegisterPasswordPage />", function () {
     expect(screen.getByText("Create a password to login:")).toBeTruthy();
     expect(screen.getByText("Password:")).toBeTruthy();
     expect(screen.getByPlaceholderText("Password")).toBeTruthy();
-    expect(
-      screen.getByText("Type the password again to confirm:"),
-    ).toBeTruthy();
     expect(screen.getByPlaceholderText("Confirm Password")).toBeTruthy();
     expect(screen.getByText("Register!")).toBeTruthy();
   });
-  // TODO: test that empty password fields display error messages
-  // TODO: test that non-matching password field and confirm password field display error message
+
+  it("should display error messages if password fields are empty when pressing register button", async function () {
+    render(<RegisterPasswordPage />);
+    const registerButton = screen.getByText("Register!");
+    const user = userEvent.setup();
+    await user.press(registerButton);
+    // check for error messages
+    expect(screen.getByText("Password cannot be empty")).toBeTruthy();
+  });
+
+  it("should display error message if passwords do not match", async function () {
+    render(<RegisterPasswordPage />);
+    const password = screen.getByPlaceholderText("Password");
+    const confirmPassword = screen.getByPlaceholderText("Confirm Password");
+    const testPassword = "123456";
+    const testConfirmPassword = "password1";
+    const user = userEvent.setup();
+    await user.type(password, testPassword);
+    await user.type(confirmPassword, testConfirmPassword);
+    const registerButton = screen.getByText("Register!");
+    await user.press(registerButton);
+    // check for error messages
+    expect(screen.getByText("Passwords do not match")).toBeTruthy();
+  });
+
+  it("should display password requirements on the page", function () {
+    render(<RegisterPasswordPage />);
+    expect(
+      screen.getByText("Password must be at least 8 characters."),
+    ).toBeTruthy();
+    expect(
+      screen.getByText("Password must contain at least one letter."),
+    ).toBeTruthy();
+    expect(
+      screen.getByText("Password must contain at least one number."),
+    ).toBeTruthy();
+  });
+  // TODO: test that error messages are displayed if password does not meet requirements
   // TODO: test that correct password fields redirect to login page
 });
