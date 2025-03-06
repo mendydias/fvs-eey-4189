@@ -4,7 +4,7 @@ import { FormHeader } from "@/components/FormHeader";
 import Typography from "@/components/Typography";
 import Button from "@/components/Button";
 import FormInput from "@/components/inputs/FormInput";
-import { Formik, FormikProps } from "formik";
+import { Formik, FormikErrors, FormikProps } from "formik";
 import * as Yup from "yup";
 import ErrorMessage from "@/components/ErrorMessage";
 import { router } from "expo-router";
@@ -27,7 +27,7 @@ const passwordSchema = Yup.object().shape({
 });
 
 const validate = (values: Yup.InferType<typeof passwordSchema>) => {
-  const errors: any = {};
+  const errors: FormikErrors<Yup.InferType<typeof passwordSchema>> = {};
   if (values.password !== values.confirmPassword) {
     errors.confirmPassword = "Passwords do not match.";
   }
