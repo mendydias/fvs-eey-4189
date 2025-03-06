@@ -1,9 +1,0 @@
-{
-  "base": "localhost",
-  "port": 8100,
-  "services": {
-    "registration": {
-      "createVoter": "/register/voter"
-    }
-  }
-}
