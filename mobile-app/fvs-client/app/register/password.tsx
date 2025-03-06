@@ -7,6 +7,7 @@ import FormInput from "@/components/inputs/FormInput";
 import { Formik, FormikProps } from "formik";
 import * as Yup from "yup";
 import ErrorMessage from "@/components/ErrorMessage";
+import { router } from "expo-router";
 
 const initialPasswordValues = {
   password: "",
@@ -26,7 +27,7 @@ const passwordSchema = Yup.object().shape({
 });
 
 const validate = (values: Yup.InferType<typeof passwordSchema>) => {
-  const errors: { confirmPassword: string | null } = { confirmPassword: null };
+  const errors: any = {};
   if (values.password !== values.confirmPassword) {
     errors.confirmPassword = "Passwords do not match.";
   }
@@ -39,11 +40,15 @@ export default function RegisterPasswordPage() {
       <FormHeader heading="Create User Login Credentials" />
       <Formik
         initialValues={initialPasswordValues}
-        onSubmit={(values) => console.log(values.password)}
+        onSubmit={(values) => {
+          console.log(values);
+          router.push("/");
+        }}
         validationSchema={passwordSchema}
         validate={validate}
       >
         {({
+          submitForm,
           handleSubmit,
           errors,
           touched,
@@ -83,7 +88,7 @@ export default function RegisterPasswordPage() {
               label="Register!"
               viewVariant="primary"
               textVariant="primaryText"
-              onPress={() => handleSubmit()}
+              onPress={submitForm}
               style={{ marginTop: 44 }}
             />
           </View>

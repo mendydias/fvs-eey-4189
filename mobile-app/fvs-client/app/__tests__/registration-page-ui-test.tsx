@@ -213,4 +213,25 @@ describe("<RegisterPasswordPage />", function () {
     ).toBeTruthy();
   });
   // TODO: test that correct password fields redirect to login page
+  it("should redirect to login page if all details are correct", async function () {
+    renderRouter(
+      {
+        index: jest.fn(() => <LoginPage />),
+        "/register/details": jest.fn(() => <RegisterDetailsPage />),
+        "/register/password": jest.fn(() => <RegisterPasswordPage />),
+      },
+      {
+        initialUrl: "/register/password",
+      },
+    );
+    const password = screen.getByPlaceholderText("Password");
+    const confirmPassword = screen.getByPlaceholderText("Confirm Password");
+    const workingPassowrd = "123AdminPasswordTest";
+    const user = userEvent.setup();
+    await user.type(password, workingPassowrd);
+    await user.type(confirmPassword, workingPassowrd);
+    const registerButton = screen.getByText("Register!");
+    await user.press(registerButton);
+    expect(screen).toHavePathname("/");
+  });
 });
