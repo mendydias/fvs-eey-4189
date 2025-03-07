@@ -1,12 +1,17 @@
+/**
+ * @module PasswordRegistration
+ * @description This module handles the password registration process for new users.
+ * It includes form validation, submission handling, and user feedback.
+ */
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet, View } from "react-native";
 import { FormHeader } from "@/components/FormHeader";
 import Typography from "@/components/Typography";
 import Button from "@/components/Button";
 import FormInput from "@/components/inputs/FormInput";
-import { Formik, FormikProps } from "formik";
+import { Formik, FormikErrors, FormikProps } from "formik";
 import * as Yup from "yup";
-import ErrorMessage from "@/components/ErrorMessage";
+import { router } from "expo-router";
 
 const initialPasswordValues = {
   password: "",
@@ -26,7 +31,7 @@ const passwordSchema = Yup.object().shape({
 });
 
 const validate = (values: Yup.InferType<typeof passwordSchema>) => {
-  const errors: { confirmPassword: string | null } = { confirmPassword: null };
+  const errors: FormikErrors<Yup.InferType<typeof passwordSchema>> = {};
   if (values.password !== values.confirmPassword) {
     errors.confirmPassword = "Passwords do not match.";
   }
@@ -39,7 +44,10 @@ export default function RegisterPasswordPage() {
       <FormHeader heading="Create User Login Credentials" />
       <Formik
         initialValues={initialPasswordValues}
-        onSubmit={(values) => console.log(values.password)}
+        onSubmit={(values) => {
+          console.log(values);
+          router.push("/");
+        }}
         validationSchema={passwordSchema}
         validate={validate}
       >

@@ -224,11 +224,14 @@ describe("<RegisterPasswordPage />", function () {
         initialUrl: "/register/password",
       },
     );
-    // fill in the details on the password page and submit
-    const registerButton = screen.getByText("Register!");
+    const password = screen.getByPlaceholderText("Password");
+    const confirmPassword = screen.getByPlaceholderText("Confirm Password");
+    const workingPassowrd = "123AdminPasswordTest";
     const user = userEvent.setup();
+    await user.type(password, workingPassowrd);
+    await user.type(confirmPassword, workingPassowrd);
+    const registerButton = screen.getByText("Register!");
     await user.press(registerButton);
-    // Ensure that the path has redirected to the login page.
     expect(screen).toHavePathname("/");
   });
 });
