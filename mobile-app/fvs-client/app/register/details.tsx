@@ -40,7 +40,7 @@ export default function RegisterDetailsPage() {
         onSubmit={registerDetails}
       >
         {({
-          handleBlur, // TODO: need to implement this as a prop in the child InputText component
+          handleBlur,
           handleSubmit,
           handleChange,
           values,

@@ -24,6 +24,7 @@ const voter: Voter = {
   email: "test.mail@kmail.com",
   dob: new Date("2005-10-17"),
   gender: "Male",
+  password: "",
 };
 
 const testPassword = "password123";
