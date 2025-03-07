@@ -1,3 +1,8 @@
+/**
+ * @module PasswordRegistration
+ * @description This module handles the password registration process for new users.
+ * It includes form validation, submission handling, and user feedback.
+ */
 import { SafeAreaView } from "react-native-safe-area-context";
 import { StyleSheet, View } from "react-native";
 import { FormHeader } from "@/components/FormHeader";
@@ -6,7 +11,6 @@ import Button from "@/components/Button";
 import FormInput from "@/components/inputs/FormInput";
 import { Formik, FormikErrors, FormikProps } from "formik";
 import * as Yup from "yup";
-import ErrorMessage from "@/components/ErrorMessage";
 import { router } from "expo-router";
 
 const initialPasswordValues = {
@@ -48,7 +52,6 @@ export default function RegisterPasswordPage() {
         validate={validate}
       >
         {({
-          submitForm,
           handleSubmit,
           errors,
           touched,
@@ -88,7 +91,7 @@ export default function RegisterPasswordPage() {
               label="Register!"
               viewVariant="primary"
               textVariant="primaryText"
-              onPress={submitForm}
+              onPress={() => handleSubmit()}
               style={{ marginTop: 44 }}
             />
           </View>
