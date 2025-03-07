@@ -11,6 +11,12 @@ import { renderRouter, screen, userEvent } from "expo-router/testing-library";
 import registrationService from "@/services/registration";
 
 jest.spyOn(registrationService, "registerVoter");
+jest.mock("expo/fetch", () => ({
+  fetch: jest.fn(() =>
+    Promise.resolve({ json: jest.fn(() => Promise.resolve({ status: 200 })) }),
+  ),
+}));
+jest.mock("expo-font");
 
 const voter: Voter = {
   nic: "sdfdf234233234",
@@ -35,7 +41,7 @@ describe("Registration Services", function () {
     );
     const user = userEvent.setup();
     // fill in the registration details
-    const loginRegisterButton = screen.getByText("Register!");
+    const loginRegisterButton = screen.getByText("Register");
     await user.press(loginRegisterButton);
     const nic = screen.getByPlaceholderText("NIC");
     const fullname = screen.getByPlaceholderText("Full name");
