@@ -13,6 +13,7 @@ type CreateVoter = {
 async function registerVoter(voter: CreateVoter) {
   let url =
     endpoints.base +
+    ":" +
     endpoints.port +
     endpoints.services.registration.createVoter;
   try {
@@ -24,13 +25,16 @@ async function registerVoter(voter: CreateVoter) {
       body: JSON.stringify(voter),
     });
     if (!response.ok) {
-      console.log(`Response status: ${response.status}`);
+      console.log("HTTP-Error: " + response.status);
     }
-
     let json = await response.json();
-    console.log(json);
+    return { ok: response.ok, json };
   } catch (error) {
     console.log(error);
+    return {
+      ok: false,
+      json: error,
+    };
   }
 }
 

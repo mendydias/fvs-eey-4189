@@ -16,8 +16,14 @@ import LoginPage from "..";
 jest.mock("expo-font");
 jest.mock("@expo/vector-icons");
 jest.mock("expo/fetch", () => ({
-  fetch: () =>
-    Promise.resolve({ response: () => Promise.resolve({ status: 200 }) }),
+  fetch: jest.fn(() =>
+    Promise.resolve({
+      ok: true,
+      status: 200,
+      json: (data?: any) =>
+        Promise.resolve({ status: 200, ok: true, body: data }),
+    }),
+  ),
 }));
 
 // common voter model used in testing
