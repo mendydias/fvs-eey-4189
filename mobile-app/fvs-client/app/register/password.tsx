@@ -41,8 +41,6 @@ const validate = (values: Yup.InferType<typeof passwordSchema>) => {
 };
 
 async function registerVoterWithCredentials(voter: Voter, password: string) {
-  console.log("Registering voter with credentials");
-  console.log({ ...voter, password });
   await registration.registerVoter({ ...voter, password });
   router.push("/");
 }

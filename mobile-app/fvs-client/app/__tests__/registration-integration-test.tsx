@@ -58,7 +58,37 @@ describe("Registration Services", function () {
     const credentialsRegisterButton = screen.getByText("Register!");
     await user.press(credentialsRegisterButton);
     // check if the service has been called
-    expect(registrationService.registerVoter);
+    expect(registrationService.registerVoter).toHaveBeenCalled();
   });
   // TODO: check if a duplicate user is created, what error messages are shown.
+  it("should show an error message if the user already exists", async function () {
+    renderRouter(
+      {
+        index: jest.fn(() => <LoginPage />),
+        "/register/details": jest.fn(() => <RegisterDetailsPage />),
+        "/register/password": jest.fn(() => <RegisterPasswordPage />),
+      },
+      { initialUrl: "/" },
+    );
+    const user = userEvent.setup();
+    const loginRegisterButton = screen.getByText("Register");
+    await user.press(loginRegisterButton);
+    const nic = screen.getByPlaceholderText("NIC");
+    const fullname = screen.getByPlaceholderText("Full name");
+    const email = screen.getByPlaceholderText("Email address");
+    const detailsRegisterButton = screen.getByText("Register!");
+    await user.type(nic, voter.nic);
+    await user.type(fullname, voter.fullname);
+    await user.type(email, voter.email);
+    await user.press(detailsRegisterButton);
+    // create the password
+    const password = screen.getByPlaceholderText("Password");
+    const confirmPassword = screen.getByPlaceholderText("Confirm Password");
+    await user.type(password, testPassword);
+    await user.type(confirmPassword, testPassword);
+    const credentialsRegisterButton = screen.getByText("Register!");
+    await user.press(credentialsRegisterButton);
+    // Check if the error message is shown
+    expect(screen.getByText("User already exists!")).toBeOnTheScreen();
+  });
 });
