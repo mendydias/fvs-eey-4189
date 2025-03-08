@@ -1,15 +1,16 @@
 import { fetch } from "expo/fetch";
 import endpoints from "@/services/endpoints.json";
 
-type Voter = {
+type CreateVoter = {
   nic: string;
   email: string;
   fullname: string;
   gender: string;
   dob: Date;
+  password: string;
 };
 
-async function registerVoter(voter: Voter) {
+async function registerVoter(voter: CreateVoter) {
   let url =
     endpoints.base +
     endpoints.port +

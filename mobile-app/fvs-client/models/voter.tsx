@@ -14,7 +14,6 @@ type Voter = {
   dob: Date;
   gender: string;
   email: string;
-  password: string;
 };
 
 const initialState: Voter = {
@@ -23,7 +22,6 @@ const initialState: Voter = {
   dob: new Date(),
   gender: GENDERS[0],
   email: "",
-  password: "",
 };
 
 type DispatchActionType = { type: string; payload: Partial<Voter> };
@@ -49,11 +47,23 @@ function reducer(state: Voter, action: DispatchActionType): Voter {
         throw new Error("Email cannot be undefined");
       }
       return { ...state, email: action.payload.email };
-    case "setPassword":
-      if (action.payload.password === undefined) {
-        throw new Error("Password cannot be undefined");
+    case "setVoterDetails":
+      if (
+        action.payload.nic &&
+        action.payload.fullname &&
+        action.payload.dob &&
+        action.payload.gender &&
+        action.payload.email
+      ) {
+        return {
+          nic: action.payload.nic,
+          fullname: action.payload.fullname,
+          dob: action.payload.dob,
+          gender: action.payload.gender,
+          email: action.payload.email,
+        };
       }
-      return { ...state, password: action.payload.password };
+      return state;
     default:
       throw new Error(`Unhandled action type: ${action.type}`);
   }
@@ -61,11 +71,16 @@ function reducer(state: Voter, action: DispatchActionType): Voter {
 
 interface VoterContextInterface {
   state: Voter;
-  dispatch?: React.Dispatch<DispatchActionType>;
+  dispatch: React.Dispatch<DispatchActionType>;
 }
 
 const VoterContext = createContext<VoterContextInterface>({
   state: initialState,
+  dispatch: () => {
+    console.warn(
+      "Using default store provider. Make sure the Voter Store Provider is present in the tree.",
+    );
+  },
 });
 
 const VoterStoreProvider = ({ children }: PropsWithChildren) => {

@@ -15,6 +15,10 @@ import LoginPage from "..";
 
 jest.mock("expo-font");
 jest.mock("@expo/vector-icons");
+jest.mock("expo/fetch", () => ({
+  fetch: () =>
+    Promise.resolve({ response: () => Promise.resolve({ status: 200 }) }),
+}));
 
 // common voter model used in testing
 const voter = {
@@ -212,7 +216,7 @@ describe("<RegisterPasswordPage />", function () {
       screen.getByText("Password is greater than 50 characters."),
     ).toBeTruthy();
   });
-  // TODO: test that correct password fields redirect to login page
+
   it("should redirect to login page if all details are correct", async function () {
     renderRouter(
       {

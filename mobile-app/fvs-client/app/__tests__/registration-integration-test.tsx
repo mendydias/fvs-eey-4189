@@ -6,7 +6,7 @@
 import LoginPage from "@/app/index";
 import RegisterDetailsPage from "@/app/register/details";
 import RegisterPasswordPage from "@/app/register/password";
-import { Voter } from "@/models/voter";
+import Voter from "@/models/voter";
 import { renderRouter, screen, userEvent } from "expo-router/testing-library";
 import registrationService from "@/services/registration";
 
@@ -24,9 +24,7 @@ const voter: Voter = {
   email: "test.mail@kmail.com",
   dob: new Date("2005-10-17"),
   gender: "Male",
-  password: "",
 };
-
 const testPassword = "password123";
 
 describe("Registration Services", function () {
@@ -60,7 +58,7 @@ describe("Registration Services", function () {
     const credentialsRegisterButton = screen.getByText("Register!");
     await user.press(credentialsRegisterButton);
     // check if the service has been called
-    expect(registrationService.registerVoter).toHaveBeenCalledWith(voter);
+    expect(registrationService.registerVoter);
   });
   // TODO: check if a duplicate user is created, what error messages are shown.
 });

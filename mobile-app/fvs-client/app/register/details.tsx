@@ -4,7 +4,7 @@ import Button from "@/components/Button";
 import CustomSelect from "@/components/inputs/CustomSelect";
 import FormInput from "@/components/inputs/FormInput";
 import { StatusBar } from "expo-status-bar";
-import { GENDERS, Voter } from "@/models/voter";
+import Voter, { GENDERS, useVoterStore } from "@/models/voter";
 import * as Yup from "yup";
 import { Formik, FormikProps } from "formik";
 import { FormHeader } from "@/components/FormHeader";
@@ -26,16 +26,22 @@ const voterSchema = Yup.object().shape({
     .required("Your email address cannot be empty"),
 });
 
-const registerDetails = (voter: Voter) => {
-  router.push("/register/password");
-};
-
 export default function RegisterDetailsPage() {
+  const { state, dispatch } = useVoterStore();
+
+  const registerDetails = (voter: Voter) => {
+    if (dispatch === undefined) {
+      throw new Error("Cannot save voter as voter dispatch is undefined");
+    }
+    dispatch({ type: "setVoterDetails", payload: voter });
+    router.push("/register/password");
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <FormHeader heading="User Registration" />
       <Formik
-        initialValues={initialVoterValues}
+        initialValues={state}
         validationSchema={voterSchema}
         onSubmit={registerDetails}
       >

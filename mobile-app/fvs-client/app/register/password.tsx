@@ -12,6 +12,8 @@ import FormInput from "@/components/inputs/FormInput";
 import { Formik, FormikErrors, FormikProps } from "formik";
 import * as Yup from "yup";
 import { router } from "expo-router";
+import Voter, { useVoterStore } from "@/models/voter";
+import registration from "@/services/registration";
 
 const initialPasswordValues = {
   password: "",
@@ -38,16 +40,23 @@ const validate = (values: Yup.InferType<typeof passwordSchema>) => {
   return errors;
 };
 
+async function registerVoterWithCredentials(voter: Voter, password: string) {
+  console.log("Registering voter with credentials");
+  console.log({ ...voter, password });
+  await registration.registerVoter({ ...voter, password });
+  router.push("/");
+}
+
 export default function RegisterPasswordPage() {
+  const { state, dispatch } = useVoterStore();
   return (
     <SafeAreaView style={styles.container}>
       <FormHeader heading="Create User Login Credentials" />
       <Formik
         initialValues={initialPasswordValues}
-        onSubmit={(values) => {
-          console.log(values);
-          router.push("/");
-        }}
+        onSubmit={(values) =>
+          registerVoterWithCredentials(state, values.password)
+        }
         validationSchema={passwordSchema}
         validate={validate}
       >
