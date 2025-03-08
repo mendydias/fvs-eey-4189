@@ -4,7 +4,7 @@
  * It includes form validation, submission handling, and user feedback.
  */
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Modal, StyleSheet, View, Text, Alert } from "react-native";
+import { StyleSheet, View, Text, Alert } from "react-native";
 import { FormHeader } from "@/components/FormHeader";
 import Typography from "@/components/Typography";
 import Button from "@/components/Button";
@@ -14,7 +14,6 @@ import * as Yup from "yup";
 import { router } from "expo-router";
 import Voter, { useVoterStore } from "@/models/voter";
 import registration from "@/services/registration";
-import { useState } from "react";
 
 const initialPasswordValues = {
   password: "",
