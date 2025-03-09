@@ -1,12 +1,19 @@
+/**
+ * @module PasswordRegistration
+ * @description This module handles the password registration process for new users.
+ * It includes form validation, submission handling, and user feedback.
+ */
 import { SafeAreaView } from "react-native-safe-area-context";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Text, Alert } from "react-native";
 import { FormHeader } from "@/components/FormHeader";
 import Typography from "@/components/Typography";
 import Button from "@/components/Button";
 import FormInput from "@/components/inputs/FormInput";
-import { Formik, FormikProps } from "formik";
+import { Formik, FormikErrors, FormikProps } from "formik";
 import * as Yup from "yup";
-import ErrorMessage from "@/components/ErrorMessage";
+import { router } from "expo-router";
+import Voter, { useVoterStore } from "@/models/voter";
+import registration from "@/services/registration";
 
 const initialPasswordValues = {
   password: "",
@@ -26,20 +33,51 @@ const passwordSchema = Yup.object().shape({
 });
 
 const validate = (values: Yup.InferType<typeof passwordSchema>) => {
-  const errors: { confirmPassword: string | null } = { confirmPassword: null };
+  const errors: FormikErrors<Yup.InferType<typeof passwordSchema>> = {};
   if (values.password !== values.confirmPassword) {
     errors.confirmPassword = "Passwords do not match.";
   }
   return errors;
 };
 
+type SetErrorMsgStateAction = (msg?: string) => void;
+async function registerVoterWithCredentials(voter: Voter, password: string) {
+  let response = await registration.registerVoter({ ...voter, password });
+  if (response) {
+    if (!response.ok) {
+      const { message } = response.json;
+      Alert.alert("Voter registration failed", message, [
+        {
+          text: "Retry",
+          onPress: () => router.push("/register/details"),
+          style: "cancel",
+        },
+        { text: "Login", onPress: () => router.push("/") },
+      ]);
+    } else {
+      Alert.alert(
+        "Voter registration is successful",
+        "Tap the login button to login now",
+      );
+      router.push("/");
+    }
+  } else {
+    Alert.alert("Something went wrong", "Retry in a few minutes.", [
+      { text: "Ok", onPress: () => router.push("/register/details") },
+    ]);
+  }
+}
+
 export default function RegisterPasswordPage() {
+  const store = useVoterStore();
   return (
     <SafeAreaView style={styles.container}>
       <FormHeader heading="Create User Login Credentials" />
       <Formik
         initialValues={initialPasswordValues}
-        onSubmit={(values) => console.log(values.password)}
+        onSubmit={(values) =>
+          registerVoterWithCredentials(store.state, values.password)
+        }
         validationSchema={passwordSchema}
         validate={validate}
       >

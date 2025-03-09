@@ -1,17 +1,19 @@
 import { fetch } from "expo/fetch";
 import endpoints from "@/services/endpoints.json";
 
-type Voter = {
+type CreateVoter = {
   nic: string;
   email: string;
   fullname: string;
   gender: string;
   dob: Date;
+  password: string;
 };
 
-async function registerVoter(voter: Voter) {
+async function registerVoter(voter: CreateVoter) {
   let url =
     endpoints.base +
+    ":" +
     endpoints.port +
     endpoints.services.registration.createVoter;
   try {
@@ -23,13 +25,16 @@ async function registerVoter(voter: Voter) {
       body: JSON.stringify(voter),
     });
     if (!response.ok) {
-      console.log(`Response status: ${response.status}`);
+      console.log("HTTP-Error: " + response.status);
     }
-
     let json = await response.json();
-    console.log(json);
+    return { ok: response.ok, json };
   } catch (error) {
     console.log(error);
+    return {
+      ok: false,
+      json: error,
+    };
   }
 }
 
