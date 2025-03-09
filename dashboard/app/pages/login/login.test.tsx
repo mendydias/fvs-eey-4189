@@ -24,5 +24,21 @@ describe("Login UI", function () {
     expect(screen.getByRole("button", { name: "Login" })).toBeInTheDocument();
   });
 
-  it("should render an error message if email address and password are empty when logging in", function () {});
+  it("should render an error message if email address and password are empty when logging in", function () {
+    const RouteStub = createRoutesStub([
+      {
+        path: "/",
+        Component: LoginPage,
+      },
+    ]);
+
+    render(<RouteStub initialEntries={["/"]} />);
+
+    const loginButton = screen.getByRole("button", { name: "Login" });
+    loginButton.click();
+    expect(
+      screen.getByText("Email address cannot be empty.")
+    ).toBeInTheDocument();
+    expect(screen.getByText("Password cannot be empty.")).toBeInTheDocument();
+  });
 });
