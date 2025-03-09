@@ -6,10 +6,13 @@
     "build": "react-router build",
     "dev": "react-router dev",
     "start": "react-router-serve ./build/server/index.js",
-    "typecheck": "react-router typegen && tsc"
+    "typecheck": "react-router typegen && tsc",
+    "test": "vitest"
   },
   "dependencies": {
     "@chakra-ui/react": "^3.9.0",
+    "@conform-to/react": "^1.2.2",
+    "@conform-to/zod": "^1.2.2",
     "@emotion/react": "^11.14.0",
     "@react-router/node": "^7.3.0",
     "@react-router/serve": "^7.3.0",
