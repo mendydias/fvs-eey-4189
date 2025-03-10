@@ -11,16 +11,17 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { Form, redirect, type ActionFunctionArgs } from "react-router";
+import { Form, redirect } from "react-router";
 import { z } from "zod";
 import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { useActionData } from "react-router";
 import { useForm } from "@conform-to/react";
 import type { Route } from "../../+types/root";
-import { useEffect } from "react";
 
 const loginSchema = z.object({
-  email: z.string({ required_error: "Email address cannot be empty." }).email(),
+  email: z
+    .string({ required_error: "Email address cannot be empty." })
+    .email("Email address is invalid."),
   password: z.string({ required_error: "Password cannot be empty." }).max(50),
 });
 
@@ -95,7 +96,6 @@ export default function LoginPage() {
                 <Input
                   id={fields.email.id}
                   name={fields.email.name}
-                  type="email"
                   color="primary"
                   defaultValue={fields.email.initialValue}
                   placeholder="Username"
