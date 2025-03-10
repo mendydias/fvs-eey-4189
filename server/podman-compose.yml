@@ -3,7 +3,7 @@ version: "3.1"
 
 services:
   mongo:
-    image: mongo
+    image: docker.io/mongo
     restart: always
     ports:
       - 27017:27017
@@ -12,7 +12,7 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: ranmal123
 
   mongo-express:
-    image: mongo-express
+    image: docker.io/mongo-express
     restart: always
     ports:
       - 8123:8081

@@ -1,8 +1,8 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
-import config from "../config";
 import { DuplicateKeyError } from "./errors";
+import loadConfig from "../config";
 
-const { logger, database_uri } = config;
+const { logger, database_uri } = loadConfig();
 
 const client = new MongoClient(database_uri, {
   serverApi: {

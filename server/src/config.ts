@@ -17,107 +17,182 @@ type LoggingPaths = {
   errorLogPath: string;
 };
 
+type AdminCredentials = {
+  user: string;
+  password: string;
+};
+
 type FVSConfig = {
   network: NetworkConfig;
   database_uri: string;
   logPaths: LoggingPaths;
   logger: winston.Logger | undefined;
+  environment: string;
+  adminCredentials: AdminCredentials;
 };
 
-let fvsConfig: FVSConfig = {
-  network: {
-    host: "",
-    port: 0,
-  },
-  logPaths: {
-    combiLogPath: "",
-    errorLogPath: "",
-  },
-  logger: undefined,
-  database_uri: "",
+const defaultAdminCredentials = {
+  user: "admin",
+  password: "admin",
 };
 
-// Load all the needed environment variables.
-configDotenv();
+type TestFVSConfig = {
+  network?: NetworkConfig;
+  logPaths?: LoggingPaths;
+  logger?: winston.Logger;
+  database_uri?: string;
+  environment?: string;
+  adminCredentials?: AdminCredentials;
+};
 
-// Configuration defaults
-let port = 8080;
-if (process.env.PORT != undefined) {
-  port = Number(process.env.PORT);
-} else {
-  winston.error(`PORT not defined, defaulting to ${port}`);
-}
+let fvsConfig: FVSConfig | undefined = undefined;
 
-let host = "localhost";
-if (process.env.HOST != undefined) {
-  host = process.env.HOST;
-} else {
-  winston.error(`HOST not defined, defaulting to ${host}`);
-}
-const network = { host, port };
-fvsConfig.network = network;
-
-if (process.env.FVS_LOG_DIR != undefined) {
-  const logDir = process.env.FVS_LOG_DIR;
-  if (!existsSync(logDir)) {
-    mkdirSync(logDir);
-
-    winston.debug(`Log directory doesn't exist, creating it at ${logDir}.`);
-  }
-  if (
-    process.env.FVS_COMBI_LOG != undefined &&
-    process.env.FVS_ERROR_LOG != undefined
-  ) {
-    const combiLogPath = path.join(
-      __dirname,
-      logDir,
-      process.env.FVS_COMBI_LOG,
-    );
-    const errorLogPath = path.join(
-      __dirname,
-      logDir,
-      process.env.FVS_ERROR_LOG,
-    );
-
-    winston.debug(`Creating combined log at ${combiLogPath}`);
-    winston.debug(`Creating error log at ${errorLogPath}`);
-
-    fvsConfig.logPaths = {
-      combiLogPath,
-      errorLogPath,
+export default function loadConfig(options?: TestFVSConfig): FVSConfig {
+  if (fvsConfig === undefined) {
+    fvsConfig = {
+      network: {
+        host: "",
+        port: 0,
+      },
+      logPaths: {
+        combiLogPath: "",
+        errorLogPath: "",
+      },
+      logger: undefined,
+      database_uri: "",
+      environment: "",
+      adminCredentials: defaultAdminCredentials,
     };
-  } else {
-    winston.error("No log paths defined for both combined and error logs.");
+    // Load all the needed environment variables.
+    configDotenv();
 
-    process.exit(1);
+    // Configuration defaults
+    if (options && options.network) {
+      fvsConfig.network = options.network;
+    } else {
+      let port = 8080;
+      if (process.env.PORT != undefined) {
+        port = Number(process.env.PORT);
+      } else {
+        winston.error(`PORT not defined, defaulting to ${port}`);
+      }
+
+      let host = "localhost";
+      if (process.env.HOST != undefined) {
+        host = process.env.HOST;
+      } else {
+        winston.error(`HOST not defined, defaulting to ${host}`);
+      }
+      const network = { host, port };
+      fvsConfig.network = network;
+    }
+
+    if (options && options.logPaths) {
+      fvsConfig.logPaths = options.logPaths;
+      const { combine, json, timestamp } = winston.format;
+      const logger = winston.createLogger({
+        level: "debug",
+        format: combine(json(), timestamp()),
+        transports: [
+          new winston.transports.File({
+            filename: options.logPaths.errorLogPath,
+            level: "error",
+          }),
+          new winston.transports.File({
+            filename: options.logPaths.combiLogPath,
+          }),
+          new winston.transports.Console(),
+        ],
+      });
+      fvsConfig.logger = logger;
+    } else {
+      if (process.env.FVS_LOG_DIR != undefined) {
+        const logDir = process.env.FVS_LOG_DIR;
+        if (!existsSync(logDir)) {
+          mkdirSync(logDir);
+        }
+        if (
+          process.env.FVS_COMBI_LOG != undefined &&
+          process.env.FVS_ERROR_LOG != undefined
+        ) {
+          const combiLogPath = path.join(
+            __dirname,
+            logDir,
+            process.env.FVS_COMBI_LOG,
+          );
+          const errorLogPath = path.join(
+            __dirname,
+            logDir,
+            process.env.FVS_ERROR_LOG,
+          );
+
+          fvsConfig.logPaths = {
+            combiLogPath,
+            errorLogPath,
+          };
+        } else {
+          winston.error(
+            "No log paths defined for both combined and error logs.",
+          );
+
+          process.exit(1);
+        }
+      } else {
+        winston.error("FVS_LOG_DIR must be set for the application to start.");
+
+        process.exit(1);
+      }
+
+      const { combine, json, timestamp } = winston.format;
+      const logger = winston.createLogger({
+        level: "debug",
+        format: combine(json(), timestamp()),
+        transports: [
+          new winston.transports.File({
+            filename: fvsConfig.logPaths.errorLogPath,
+            level: "error",
+          }),
+          new winston.transports.File({
+            filename: fvsConfig.logPaths.combiLogPath,
+          }),
+          new winston.transports.Console(),
+        ],
+      });
+      fvsConfig.logger = logger;
+    }
+
+    if (options && options.environment) {
+      fvsConfig.environment = options.environment;
+    } else {
+      fvsConfig.environment = process.env.FVS_ENVIRONMENT || "DEVELOPMENT";
+    }
+
+    if (options && options.database_uri) {
+      fvsConfig.database_uri = options.database_uri;
+    } else {
+      if (process.env.FVS_DB_URI !== undefined) {
+        fvsConfig.database_uri = process.env.FVS_DB_URI;
+      } else {
+        throw new Error(
+          "Cannot start server without specifying database connection url",
+        );
+      }
+    }
+
+    if (options && options.adminCredentials) {
+      fvsConfig.adminCredentials = options.adminCredentials;
+    } else {
+      if (
+        process.env.FVS_ADMIN_USER !== undefined &&
+        process.env.FVS_ADMIN_PASSWORD !== undefined
+      ) {
+        fvsConfig.adminCredentials = {
+          user: process.env.FVS_ADMIN_USER,
+          password: process.env.FVS_ADMIN_PASSWORD,
+        };
+      }
+    }
   }
-} else {
-  winston.error("FVS_LOG_DIR must be set for the application to start.");
 
-  process.exit(1);
+  return fvsConfig;
 }
-
-const { combine, json, timestamp } = winston.format;
-const logger = winston.createLogger({
-  level: "debug",
-  format: combine(json(), timestamp()),
-  transports: [
-    new winston.transports.File({
-      filename: fvsConfig.logPaths.errorLogPath,
-      level: "error",
-    }),
-    new winston.transports.File({ filename: fvsConfig.logPaths.combiLogPath }),
-    new winston.transports.Console(),
-  ],
-});
-fvsConfig.logger = logger;
-
-if (process.env.FVS_DB_URI !== undefined) {
-  fvsConfig.database_uri = process.env.FVS_DB_URI;
-} else {
-  throw new Error(
-    "Cannot start server without specifying database connection url",
-  );
-}
-
-export default fvsConfig;

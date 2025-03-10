@@ -4,11 +4,11 @@
 import express from "express";
 import Voter from "../models/registration-models";
 import repo from "../repositories/registration-repository";
-import config from "../config";
+import loadConfig from "../config";
 import { DuplicateKeyError } from "../repositories/errors";
 
 const router = express.Router();
-const { logger } = config;
+const { logger } = loadConfig();
 
 router.post("/voter", async (req, res) => {
   // Parse the request body to get the voter data.

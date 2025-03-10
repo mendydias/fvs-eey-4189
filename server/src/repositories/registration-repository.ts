@@ -2,14 +2,14 @@
  * @module Repository abstraction for the data layer.
  */
 import { Voter } from "../models/registration-models";
-import config from "../config";
 import configureDatabase from "./db";
+import loadConfig from "../config";
 
-const { logger } = config;
+const { logger, environment } = loadConfig();
 
 // The save database call is abstracted so that the development version can use mongo
 // and production can use firebase.
-const db = configureDatabase("DEVELOPMENT");
+const db = configureDatabase(environment);
 
 // Describes the operations the database should be able to perform.
 type VoterRepository = {
@@ -20,6 +20,7 @@ type VoterRepository = {
 // The name of the collection. Use this global to access the collection for voter data.
 const VOTERS = "voters";
 
+// Voter methods
 async function save(voter: Voter): Promise<string> {
   logger?.debug(`Saving ${voter.nic}:${voter.fullname} to database.`);
   return db.save(VOTERS, voter, voter.nic);
