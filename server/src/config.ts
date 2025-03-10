@@ -7,6 +7,7 @@ import * as winston from "winston";
 import { mkdirSync, existsSync } from "fs";
 import path from "path";
 import configureDatabase from "./repositories/db";
+import * as crypto from "./repositories/crypto";
 
 type NetworkConfig = {
   host: string;
@@ -25,7 +26,7 @@ type AdminCredentials = {
 
 type Environment = "DEVELOPMENT" | "PRODUCTION" | "TESTING";
 
-type FVSConfig = {
+export type FVSConfig = {
   network: NetworkConfig;
   database_uri: string;
   logPaths: LoggingPaths;
@@ -199,9 +200,15 @@ export default function loadConfig(options?: TestFVSConfig): FVSConfig {
 
 export async function loadAdminCredentials(config: FVSConfig) {
   const db = configureDatabase(config.environment);
+  const hashedPassword = await crypto.preparePassword(
+    config.adminCredentials.password,
+    10,
+  );
   const user_id = await db.saveUser(
     config.adminCredentials.user,
-    config.adminCredentials.password,
+    hashedPassword,
   );
-  await db.saveAdmin(user_id);
+  if (user_id != null) {
+    await db.saveAdmin(user_id);
+  }
 }

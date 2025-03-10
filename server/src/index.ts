@@ -1,8 +1,8 @@
 import bodyParser from "body-parser";
 import express from "express";
 import helmet from "helmet";
-
-import RegistrationRouter from "./routes/registration-controller";
+import getUserRegistrationRouter from "./routes/registration-controller";
+import loadConfig from "./config";
 
 const app = express();
 
@@ -12,6 +12,8 @@ app.use(helmet());
 app.use(bodyParser.json());
 
 // routers
+const config = loadConfig();
+const RegistrationRouter = getUserRegistrationRouter(config);
 app.use("/register", RegistrationRouter);
 
 // default sanity handshake
@@ -19,4 +21,9 @@ app.get("/", (req, res) => {
   res.send("Hello World!");
 });
 
-export default app;
+export default function getApplication() {
+  return {
+    config,
+    app,
+  };
+}

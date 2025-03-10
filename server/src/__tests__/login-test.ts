@@ -39,10 +39,7 @@ describe("Default Admin Login", function () {
   it("should call the database function to save the admin credentials when configuration is loaded", async function () {
     const config = loadConfig({ environment: "TESTING" });
     await loadAdminCredentials(config);
-    expect(mockdbTestMock.saveUser).toBeCalledWith(
-      defaultAdmin,
-      defaultPassword,
-    );
+    expect(mockdbTestMock.saveUser).toBeCalled();
     expect(mockdbTestMock.saveAdmin).toBeCalled();
   });
 

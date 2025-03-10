@@ -1,4 +1,4 @@
-import { Voter } from "src/models/registration-models";
+import { User, Voter } from "src/models/registration-models";
 import firebasedb from "./firebase";
 import mockdbTest from "./mockdb";
 import mongodbDev from "./mongodb.dev";
@@ -6,8 +6,8 @@ import mongodbDev from "./mongodb.dev";
 type Database = {
   saveVoter: (voter: Voter) => Promise<string>;
   saveAdmin: (user_id: string) => Promise<string>;
-  saveUser: (email: string, password: string) => Promise<string>;
-  verifyUser: (email: string, password: string) => Promise<boolean>;
+  saveUser: (email: string, password: string) => Promise<string | null>;
+  findUser: (user: Partial<User>) => Promise<User | null>;
 };
 
 export default function configureDatabase(
