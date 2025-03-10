@@ -1,4 +1,4 @@
-import { describe, expect, it, jest } from "@jest/globals";
+import { describe, expect, it } from "@jest/globals";
 import loadConfig, { loadAdminCredentials } from "../config";
 import getUserRepository from "../repositories/user-repository";
 
@@ -8,7 +8,6 @@ const defaultCredentials = {
 };
 
 describe("Login verification tests", function () {
-  // TODO: Verify login succeeds for correct password
   it("should correctly verify the login credentials", async function () {
     const config = loadConfig({ environment: "TESTING" });
     await loadAdminCredentials(config);
@@ -17,5 +16,14 @@ describe("Login verification tests", function () {
     expect(outcome).toBe(true);
   });
 
-  // TODO: Verify login fails for incorrect password
+  it("should fail when incorrect credentials are used", async function () {
+    const config = loadConfig({ environment: "TESTING" });
+    await loadAdminCredentials(config);
+    const repo = getUserRepository(config);
+    const outcome = await repo.verifyUser({
+      email: "admin@admin.com",
+      password: "wrongpassword",
+    });
+    expect(outcome).toBe(false);
+  });
 });
