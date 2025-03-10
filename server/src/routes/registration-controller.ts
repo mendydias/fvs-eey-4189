@@ -2,10 +2,10 @@
  * @module Registration endpoints for basic crud.
  */
 import express from "express";
-import Voter from "../models/registration-models";
 import repo from "../repositories/registration-repository";
 import loadConfig from "../config";
 import { DuplicateKeyError } from "../repositories/errors";
+import { VoterSchema } from "src/models/registration-models";
 
 const router = express.Router();
 const { logger } = loadConfig();
@@ -14,7 +14,7 @@ router.post("/voter", async (req, res) => {
   // Parse the request body to get the voter data.
   logger?.debug("Handling voter registration.");
 
-  let result = Voter.safeParse(req.body);
+  let result = VoterSchema.safeParse(req.body);
 
   logger?.debug(
     `Voter registration body validation result: ${result.success}.`,

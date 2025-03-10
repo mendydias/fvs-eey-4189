@@ -37,6 +37,6 @@
 //   return entityId;
 // }
 //
-import mockdbTest from "./mockdb.test";
+import mockdbTest from "./mockdb";
 
 export default mockdbTest;

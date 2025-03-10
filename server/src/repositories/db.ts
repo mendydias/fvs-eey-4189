@@ -1,6 +1,6 @@
 import { Voter } from "src/models/registration-models";
 import firebasedb from "./firebase";
-import mockdbTest from "./mockdb.test";
+import mockdbTest from "./mockdb";
 import mongodbDev from "./mongodb.dev";
 
 type Database = {
