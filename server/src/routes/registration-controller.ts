@@ -2,7 +2,7 @@
  * @module Registration endpoints for basic crud.
  */
 import express from "express";
-import repo from "../repositories/registration-repository";
+import repo from "../repositories/user-repository";
 import loadConfig from "../config";
 import { DuplicateKeyError } from "../repositories/errors";
 import { VoterSchema } from "src/models/registration-models";
