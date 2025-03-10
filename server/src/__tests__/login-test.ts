@@ -51,7 +51,7 @@ describe("Default Admin Login", function () {
     const testPassword = "password123";
     process.env.FVS_ADMIN_USER = testAdmin;
     process.env.FVS_ADMIN_PASSWORD = testPassword;
-    const config = loadConfig();
+    const config = loadConfig({ environment: "TESTING" });
     expect(config.adminCredentials.user).toBe(testAdmin);
     expect(config.adminCredentials.password).toBe(testPassword);
   });

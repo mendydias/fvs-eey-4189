@@ -198,13 +198,10 @@ export default function loadConfig(options?: TestFVSConfig): FVSConfig {
 }
 
 export async function loadAdminCredentials(config: FVSConfig) {
-  console.log("inside load admin credentials");
   const db = configureDatabase(config.environment);
   const user_id = await db.saveUser(
     config.adminCredentials.user,
     config.adminCredentials.password,
   );
-  console.log("user id:", user_id);
-  console.log("calling saveAdmin: ", db);
   await db.saveAdmin(user_id);
 }
