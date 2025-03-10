@@ -1,4 +1,4 @@
-import getApplication from "@";
+import getApplication from "./index";
 
 // load the configuration
 const { config, app } = getApplication();

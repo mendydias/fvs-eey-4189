@@ -24,7 +24,7 @@ type AdminCredentials = {
   password: string;
 };
 
-type Environment = "DEVELOPMENT" | "PRODUCTION" | "TESTING";
+export type Environment = "DEVELOPMENT" | "PRODUCTION" | "TESTING";
 
 export type FVSConfig = {
   network: NetworkConfig;

@@ -1,17 +1,32 @@
 /**
  * @module Registration endpoints for basic crud.
  */
-import express from "express";
+import express, { Router } from "express";
 import { DuplicateKeyError } from "../repositories/errors";
-import { VoterSchema } from "src/models/registration-models";
-import { FVSConfig } from "src/config";
-import getUserRepository from "src/repositories/user-repository";
+import { VoterSchema } from "../models/registration-models";
+import { FVSConfig } from "../config";
+import getUserRepository, {
+  type UserRepository,
+} from "../repositories/user-repository";
+import winston from "winston";
 
 export default function getUserRegistrationRouter(config: FVSConfig) {
   const { logger } = config;
   const router = express.Router();
   const repo = getUserRepository(config);
 
+  // registration endpoints
+  setupVoterRegistration(router, repo, logger);
+
+  return router;
+}
+
+// /register/voter
+function setupVoterRegistration(
+  router: Router,
+  repo: UserRepository,
+  logger?: winston.Logger,
+) {
   router.post("/voter", async (req, res) => {
     // Parse the request body to get the voter data.
     logger?.debug("Handling voter registration.");
@@ -63,5 +78,4 @@ export default function getUserRegistrationRouter(config: FVSConfig) {
       });
     }
   });
-  return router;
 }

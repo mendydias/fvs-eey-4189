@@ -7,7 +7,7 @@ import * as crypto from "./crypto";
 import { FVSConfig } from "../config";
 
 // Describes the operations the database should be able to perform.
-type UserRepository = {
+export type UserRepository = {
   // Save voter data to the database.
   save: (voter: Voter) => Promise<string>;
   saveUser: (user: User) => Promise<string>;
