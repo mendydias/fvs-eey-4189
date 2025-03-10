@@ -37,10 +37,6 @@
 //   return entityId;
 // }
 //
-async function save(collection: string, entity: any, entityId: any) {
-  return "jsafa";
-}
+import mockdbTest from "./mockdb.test";
 
-export default {
-  save,
-};
+export default mockdbTest;

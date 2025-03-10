@@ -14,14 +14,10 @@ const client = new MongoClient(database_uri, {
 
 const db = client.db("fvs");
 
-async function save(
-  collection: string,
-  entity: any,
-  entityId: any,
-): Promise<any> {
+async function saveVoter(voter: Voter): Promise<any> {
   try {
     let result = await db
-      .collection(collection)
+      .collection("voters")
       .insertOne({ _id: entityId, ...entity });
     logger?.debug(result.insertedId);
     return result.insertedId;

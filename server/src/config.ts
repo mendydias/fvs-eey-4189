@@ -22,17 +22,19 @@ type AdminCredentials = {
   password: string;
 };
 
+type Environment = "DEVELOPMENT" | "PRODUCTION" | "TESTING";
+
 type FVSConfig = {
   network: NetworkConfig;
   database_uri: string;
   logPaths: LoggingPaths;
   logger: winston.Logger | undefined;
-  environment: string;
+  environment: Environment;
   adminCredentials: AdminCredentials;
 };
 
 const defaultAdminCredentials = {
-  user: "admin",
+  user: "admin@admin.com",
   password: "admin",
 };
 
@@ -41,7 +43,7 @@ type TestFVSConfig = {
   logPaths?: LoggingPaths;
   logger?: winston.Logger;
   database_uri?: string;
-  environment?: string;
+  environment?: Environment;
   adminCredentials?: AdminCredentials;
 };
 
@@ -60,7 +62,7 @@ export default function loadConfig(options?: TestFVSConfig): FVSConfig {
       },
       logger: undefined,
       database_uri: "",
-      environment: "",
+      environment: "DEVELOPMENT",
       adminCredentials: defaultAdminCredentials,
     };
     // Load all the needed environment variables.
@@ -164,7 +166,10 @@ export default function loadConfig(options?: TestFVSConfig): FVSConfig {
     if (options && options.environment) {
       fvsConfig.environment = options.environment;
     } else {
-      fvsConfig.environment = process.env.FVS_ENVIRONMENT || "DEVELOPMENT";
+      if (process.env.FVS_ENVIRONMENT) {
+        fvsConfig.environment =
+          (process.env.FVS_ENVIRONMENT as Environment) || "DEVELOPMENT";
+      }
     }
 
     if (options && options.database_uri) {

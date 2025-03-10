@@ -1,16 +1,27 @@
+import { Voter } from "src/models/registration-models";
 import firebasedb from "./firebase";
+import mockdbTest from "./mockdb.test";
 import mongodbDev from "./mongodb.dev";
 
 type Database = {
-  save: (collection: string, entity: any, entityId: any) => Promise<any>;
+  saveVoter: (voter: Voter) => Promise<string>;
+  saveAdmin: (user_id: string) => Promise<string>;
+  saveUser: (email: string, password: string) => Promise<string>;
+  verifyUser: (email: string, password: string) => Promise<boolean>;
 };
 
-export default function configureDatabase(environment: string): Database {
+export default function configureDatabase(
+  environment: "PRODUCTION" | "DEVELOPMENT" | "TESTING",
+): Database {
   switch (environment) {
     case "DEVELOPMENT": {
       return mongodbDev;
     }
-    default:
+    case "PRODUCTION":
       return firebasedb;
+    case "TESTING":
+      return mockdbTest;
+    default:
+      throw new Error("Invalid environment");
   }
 }

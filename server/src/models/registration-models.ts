@@ -3,7 +3,7 @@
  */
 import { z } from "zod";
 
-const Voter = z.object({
+export const VoterSchema = z.object({
   nic: z.string().min(10),
   fullname: z.string(),
   dob: z.string().date(),
@@ -15,6 +15,10 @@ const Voter = z.object({
   email: z.string().email(),
 });
 
-export type Voter = z.infer<typeof Voter>;
+export const UserSchema = z.object({
+  email: z.string().email(),
+  password: z.string(),
+});
 
-export default Voter;
+export type User = z.infer<typeof UserSchema>;
+export type Voter = z.infer<typeof VoterSchema>;

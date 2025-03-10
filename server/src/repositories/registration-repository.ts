@@ -18,12 +18,11 @@ type VoterRepository = {
 };
 
 // The name of the collection. Use this global to access the collection for voter data.
-const VOTERS = "voters";
 
 // Voter methods
 async function save(voter: Voter): Promise<string> {
   logger?.debug(`Saving ${voter.nic}:${voter.fullname} to database.`);
-  return db.save(VOTERS, voter, voter.nic);
+  return db.saveVoter(voter);
 }
 
 const repo: VoterRepository = {
