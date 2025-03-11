@@ -163,7 +163,30 @@ describe("Voter CRUD tests", function () {
     expect(response.status).toBe(201);
   });
 
-  it.todo("should return 401 when trying to update a voter without admin role");
+  it("should return 401 when trying to update a voter without admin role", async function () {
+    const voter = {
+      nic: "123412asds009911",
+      fullname: "John Doe",
+      dob: "1990-01-01",
+      gender: "m",
+      email: "johndoe@example.com",
+      password: "1234password1234",
+    };
+
+    const newFullName = "david becker";
+
+    const { app, config } = getApplication();
+    await request(app).post("/register/voter").send(voter);
+
+    const response = await request(app)
+      .put("/register/voter")
+      .send({
+        ...voter,
+        fullname: newFullName,
+      });
+
+    expect(response.status).toBe(401);
+  });
 
   it.todo("should return 404 when trying to update a non-existing voter");
 
