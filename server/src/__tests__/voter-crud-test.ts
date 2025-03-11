@@ -131,7 +131,39 @@ describe("Voter CRUD tests", function () {
     expect(deleteResponse.status).toBe(404);
   });
 
-  it.todo("should return 201 when updating an existing voter");
+  it("should return 201 when updating an existing voter", async function () {
+    console.log(
+      "Commencing test, model-crud-test: should return 201 when updating an existing voter",
+    );
+
+    const voter = {
+      nic: "2afdasdfasdfasdfasdfasf",
+      fullname: "John Doe",
+      dob: "1990-01-01",
+      gender: "m",
+      email: "johndoe@example.com",
+      password: "1234password1234",
+    };
+
+    const newFullName = "Gjohn Deer";
+
+    const { app, config } = getApplication();
+    await request(app).post("/register/voter").send(voter);
+    const loginResponse = await request(app)
+      .post("/auth/login")
+      .send(defaultCredentials);
+    const response = await request(app)
+      .put("/register/voter")
+      .set("authorization", `Bearer ${loginResponse.body.token}`)
+      .send({
+        ...voter,
+        fullname: newFullName,
+      });
+
+    expect(response.status).toBe(201);
+  });
+
+  it.todo("should return 401 when trying to update a voter without admin role");
 
   it.todo("should return 404 when trying to update a non-existing voter");
 
@@ -139,7 +171,7 @@ describe("Voter CRUD tests", function () {
     "should return 200 and return an array of voter objects in response to a get call",
   );
 
-  it.todo("should return 200 and return the specific voter");
-
   it.todo("should return 404 when trying to fetch a non-existing voter");
+
+  it.todo("should return 401 if a normal voter tries to delete another voter");
 });

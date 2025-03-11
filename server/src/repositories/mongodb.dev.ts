@@ -125,6 +125,32 @@ async function deleteVoter(voter: Partial<Voter>): Promise<boolean> {
   return false;
 }
 
+async function updateCollection(
+  filter: any,
+  updateDoc: any,
+  collection: string,
+): Promise<number> {
+  if (filter && updateDoc) {
+    const result = await db
+      .collection(collection)
+      .updateOne(filter, updateDoc, { upsert: false });
+    return result.modifiedCount;
+  }
+  return 0;
+}
+
+async function updateVoter(filter: any, updateDoc: any): Promise<number> {
+  return await updateCollection(filter, { $set: updateDoc }, VOTERS);
+}
+
+async function updateUser(filter: any, updateDoc: any): Promise<number> {
+  return await updateCollection(
+    filter,
+    { $set: { email: updateDoc.email } },
+    USERS,
+  );
+}
+
 export default {
   saveVoter,
   saveAdmin,
@@ -133,4 +159,6 @@ export default {
   findVoter,
   deleteUser,
   deleteVoter,
+  updateUser,
+  updateVoter,
 };

@@ -17,6 +17,19 @@ export const VoterSchema = z.object({
   password: z.string(),
 });
 
+export const VoterUpdateSchema = z.object({
+  _id: z.optional(z.string()),
+  nic: z.string(),
+  fullname: z.string(),
+  dob: z.string().date(),
+  gender: z.enum(["m", "f", "o"], {
+    required_error: "Gender is required",
+    invalid_type_error:
+      "Gender must be a string containing either 'm', 'f', or 'o'",
+  }),
+  email: z.string().email(),
+});
+
 export const UserSchema = z.object({
   _id: z.optional(z.string()),
   email: z.string().email(),
@@ -38,5 +51,6 @@ export type User = {
   password: string;
   role: Role;
 };
+export type VoterUpdate = z.infer<typeof VoterUpdateSchema>;
 export type Voter = z.infer<typeof VoterSchema>;
 export type Admin = z.infer<typeof AdminSchema>;

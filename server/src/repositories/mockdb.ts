@@ -81,6 +81,30 @@ const deleteUser = async (user: Partial<User>) => {
   return false;
 };
 
+const updateVoter = async (filter: any, updateDoc: any) => {
+  let prevVoter = voters.get(filter.nic);
+  if (!prevVoter) {
+    return 0;
+  }
+  voters.delete(filter.nic);
+  voters.set(filter.nic, {
+    ...updateDoc,
+    _id: filter.nic,
+    password: prevVoter.password,
+  });
+  return 1;
+};
+
+const updateUser = async (filter: any, updateDoc: any) => {
+  let prevUser = users.get(filter.email);
+  if (!prevUser) {
+    return 0;
+  }
+  users.delete(filter.email);
+  users.set(filter.email, { ...prevUser, email: updateDoc.email });
+  return 1;
+};
+
 export default {
   saveVoter,
   saveAdmin,
@@ -89,4 +113,6 @@ export default {
   findVoter,
   deleteVoter,
   deleteUser,
+  updateVoter,
+  updateUser,
 };

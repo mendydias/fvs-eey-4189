@@ -15,6 +15,8 @@ type Database = {
   findVoter: (voter: Partial<Voter>) => Promise<Voter | null>;
   deleteUser: (user: Partial<User>) => Promise<boolean>;
   deleteVoter: (voter: Partial<Voter>) => Promise<boolean>;
+  updateVoter: (filter: any, updateDoc: any) => Promise<number>;
+  updateUser: (filter: any, updateDoc: any) => Promise<number>;
 };
 
 export default function configureDatabase(

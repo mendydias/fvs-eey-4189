@@ -1,7 +1,7 @@
 /**
  * @module Repository abstraction for the data layer.
  */
-import { User, Voter } from "../models/registration-models";
+import { User, Voter, VoterUpdate } from "../models/registration-models";
 import configureDatabase from "./db";
 import * as crypto from "./crypto";
 import { FVSConfig } from "../config";
@@ -17,11 +17,17 @@ export type UserRepository = {
   verifyUser: (user: Partial<User>) => Promise<boolean>;
   verifyUserWithRole: (user: Partial<User>) => Promise<boolean>;
   deleteVoter: (voterId: string) => Promise<DeletionStatus>;
+  updateVoter: (voter: VoterUpdate) => Promise<UpdateStatus>;
 };
 
 type DeletionStatus = {
   ok: boolean;
   deletedId?: string;
+};
+
+type UpdateStatus = {
+  ok: boolean;
+  updated?: VoterUpdate;
 };
 
 export function getUserRepository({
@@ -120,6 +126,26 @@ export function getUserRepository({
     return await db.findUser(user);
   }
 
+  async function updateVoter(voter: VoterUpdate): Promise<UpdateStatus> {
+    logger?.debug(`Updating voter with id [${voter.nic}] in the database.`);
+    const exists: Voter | null = await db.findVoter({ nic: voter.nic });
+    if (exists) {
+      if (exists.email !== voter.email) {
+        await db.updateUser({ email: exists.email }, { email: voter.email });
+      }
+      const modifiedCount = await db.updateVoter({ nic: voter.nic }, voter);
+      if (modifiedCount > 0) {
+        return {
+          ok: true,
+          updated: voter,
+        };
+      }
+    }
+    return {
+      ok: false,
+    };
+  }
+
   return {
     save,
     saveUser,
@@ -129,6 +155,7 @@ export function getUserRepository({
     verifyUserWithRole,
     deleteVoter,
     findUser,
+    updateVoter,
   };
 }
 
