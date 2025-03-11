@@ -105,6 +105,17 @@ const updateUser = async (filter: any, updateDoc: any) => {
   return 1;
 };
 
+const findAllVoters = async () => {
+  const voterArray = Array.from(voters.values());
+  return voterArray.map((voter) => ({
+    nic: voter.nic,
+    fullname: voter.fullname,
+    dob: voter.dob,
+    gender: voter.gender,
+    email: voter.email,
+  }));
+};
+
 export default {
   saveVoter,
   saveAdmin,
@@ -115,4 +126,5 @@ export default {
   deleteUser,
   updateVoter,
   updateUser,
+  findAllVoters,
 };

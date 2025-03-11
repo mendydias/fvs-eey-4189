@@ -1,7 +1,13 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
 import { DuplicateKeyError } from "./errors";
 import loadConfig from "../config";
-import { Admin, Role, User, Voter } from "src/models/registration-models";
+import {
+  Admin,
+  Role,
+  User,
+  Voter,
+  VoterUpdate,
+} from "src/models/registration-models";
 
 const { logger, database_uri } = loadConfig();
 
@@ -151,6 +157,17 @@ async function updateUser(filter: any, updateDoc: any): Promise<number> {
   );
 }
 
+async function findAllVoters(): Promise<VoterUpdate[]> {
+  const voterArray = await db.collection<Voter>(VOTERS).find().toArray();
+  return voterArray.map((voter) => ({
+    nic: voter.nic,
+    fullname: voter.fullname,
+    gender: voter.gender,
+    dob: voter.dob,
+    email: voter.email,
+  }));
+}
+
 export default {
   saveVoter,
   saveAdmin,
@@ -161,4 +178,5 @@ export default {
   deleteVoter,
   updateUser,
   updateVoter,
+  findAllVoters,
 };

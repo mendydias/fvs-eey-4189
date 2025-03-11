@@ -18,6 +18,7 @@ export type UserRepository = {
   verifyUserWithRole: (user: Partial<User>) => Promise<boolean>;
   deleteVoter: (voterId: string) => Promise<DeletionStatus>;
   updateVoter: (voter: VoterUpdate) => Promise<UpdateStatus>;
+  getAllVoters: () => Promise<VoterUpdate[]>;
 };
 
 type DeletionStatus = {
@@ -141,9 +142,15 @@ export function getUserRepository({
         };
       }
     }
+
     return {
       ok: false,
     };
+  }
+
+  async function getAllVoters(): Promise<VoterUpdate[]> {
+    logger?.debug(`Getting all voters from database.`);
+    return await db.findAllVoters();
   }
 
   return {
@@ -156,6 +163,7 @@ export function getUserRepository({
     deleteVoter,
     findUser,
     updateVoter,
+    getAllVoters,
   };
 }
 

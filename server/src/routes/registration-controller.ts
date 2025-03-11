@@ -27,6 +27,7 @@ export default function getUserRegistrationRouter(config: FVSConfig) {
   setupVoterRegistration({ router, repo, logger });
   setupVoterDeletion({ router, repo, logger });
   setupVoterUpdate({ router, repo, logger });
+  setupVoterFetch({ router, repo, logger });
 
   return router;
 }
@@ -157,6 +158,23 @@ function setupVoterUpdate({ router, repo, logger }: EndpointSetupRequirements) {
           message: "Unable to update voter, request malformed",
         });
       }
+    } else {
+      res.status(401).json({
+        message: "Not authenticated",
+      });
+    }
+  });
+}
+
+function setupVoterFetch({ router, repo, logger }: EndpointSetupRequirements) {
+  logger?.debug("Setting up voter fetch endpoint.");
+
+  router.get("/voters", async (req, res) => {
+    const token = req.headers["authorization"]?.split(" ")[1];
+    const verification = await verifyToken(repo, token);
+    if (verification) {
+      const voters = await repo.getAllVoters();
+      res.status(200).json(voters);
     } else {
       res.status(401).json({
         message: "Not authenticated",

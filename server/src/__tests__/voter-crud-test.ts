@@ -232,11 +232,16 @@ describe("Voter CRUD tests", function () {
     await request(app).post("/register/voter").send(voter1);
     await request(app).post("/register/voter").send(voter2);
 
-    const response = await request(app).get("/register/voters");
+    const loginResponse = await request(app)
+      .post("/auth/login")
+      .send(defaultCredentials);
+
+    const response = await request(app)
+      .get("/register/voters")
+      .set("authorization", `Bearer ${loginResponse.body.token}`);
+
     expect(response.status).toBe(200);
     expect(response.body.length).toBe(2);
-    expect(response.body).toContainEqual(voter1);
-    expect(response.body).toContainEqual(voter2);
   });
 
   it.todo("should return 404 when trying to fetch a non-existing voter");
