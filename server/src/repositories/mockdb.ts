@@ -6,7 +6,6 @@ let admins: Map<string, Admin> = new Map();
 let users: Map<string, User> = new Map();
 
 export function clearDb() {
-  console.log("Clearing db");
   voters = new Map();
   admins = new Map();
   users = new Map();
@@ -17,7 +16,6 @@ const saveVoter = async (voter: Voter) => {
     throw new DuplicateKeyError(voter.nic);
   }
   voters.set(voter.nic, { _id: voter.nic, ...voter });
-  console.log("Inside save voter, db", voters);
   return voter.nic;
 };
 
@@ -30,7 +28,6 @@ const saveAdmin = async (user_id: string) => {
     date_registered: new Date(),
     user: { id: user_id, email: user?.email },
   });
-  console.log("Inside save admin, db", admins);
   return user_id;
 };
 
@@ -39,12 +36,10 @@ const saveUser = async (email: string, password: string, role: Role) => {
     throw new DuplicateKeyError(email);
   }
   users.set(email, { email, password, role });
-  console.log("Inside save user, db", users);
   return email;
 };
 
 const findUser = async (user: Partial<User>) => {
-  console.log("Inside find user, db", users);
   if (user && user.email) {
     const dbUser = users.get(user.email);
     if (dbUser) {
@@ -55,7 +50,6 @@ const findUser = async (user: Partial<User>) => {
 };
 
 const findVoter = async (voter: Partial<Voter>) => {
-  console.log("Inside find voter, db", voters);
   if (voter && voter.nic) {
     const dbVoter = voters.get(voter.nic);
     if (dbVoter) {
@@ -66,7 +60,6 @@ const findVoter = async (voter: Partial<Voter>) => {
 };
 
 const deleteVoter = async (voter: Partial<Voter>) => {
-  console.log("Inside delete voter, db", voters);
   if (voter && voter.nic) {
     return voters.delete(voter.nic); // this will return false if the voter doesn't exist
   }
@@ -74,7 +67,6 @@ const deleteVoter = async (voter: Partial<Voter>) => {
 };
 
 const deleteUser = async (user: Partial<User>) => {
-  console.log("Inside delete user, db", users);
   if (user && user.email) {
     return users.delete(user.email); // this will return false if the user doesn't exist
   }

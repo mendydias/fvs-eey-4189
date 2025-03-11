@@ -36,7 +36,6 @@ export async function signToken(user: User, issuer: string, audience: string) {
 export async function verifyToken(token: string) {
   try {
     const payload = jwt.verify(token, secret_key) as TokenPayload;
-    console.debug("payload", payload);
     return {
       sub: payload.sub,
       name: payload.name,

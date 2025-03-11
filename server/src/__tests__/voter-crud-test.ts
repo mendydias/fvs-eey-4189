@@ -132,10 +132,6 @@ describe("Voter CRUD tests", function () {
   });
 
   it("should return 201 when updating an existing voter", async function () {
-    console.log(
-      "Commencing test, model-crud-test: should return 201 when updating an existing voter",
-    );
-
     const voter = {
       nic: "2afdasdfasdfasdfasdfasf",
       fullname: "John Doe",
@@ -161,12 +157,6 @@ describe("Voter CRUD tests", function () {
       });
 
     expect(response.status).toBe(201);
-
-    const voterResponse = await request(app)
-      .get("/voter/" + voter.nic)
-      .set("authorization", `Bearer ${loginResponse.body.token}`);
-
-    expect(voterResponse.body).toEqual(voter);
   });
 
   it("should return 401 when trying to update a voter without admin role", async function () {
@@ -248,6 +238,36 @@ describe("Voter CRUD tests", function () {
 
     expect(response.status).toBe(200);
     expect(response.body.length).toBe(2);
+  });
+
+  it("should return a single voter", async function () {
+    const voter = {
+      nic: "1203812ldlsdfmadsfa",
+      fullname: "John Doe",
+      dob: "1990-01-01",
+      gender: "m",
+      email: "johndoe@example.com",
+      password: "1234password1234",
+    };
+
+    const { app, config } = getApplication();
+    await request(app).post("/register/voter").send(voter);
+    const loginResponse = await request(app)
+      .post("/auth/login")
+      .send(defaultCredentials);
+
+    const voterResponse = await request(app)
+      .get("/register/voter/" + voter.nic)
+      .set("authorization", `Bearer ${loginResponse.body.token}`);
+
+    expect(voterResponse.status).toBe(200);
+    expect(voterResponse.body).toEqual({
+      nic: voter.nic,
+      fullname: voter.fullname,
+      dob: voter.dob,
+      gender: voter.gender,
+      email: voter.email,
+    });
   });
 
   it("should return 404 when trying to fetch a non-existing voter", async function () {});

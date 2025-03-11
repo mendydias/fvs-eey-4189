@@ -13,6 +13,7 @@ export type UserRepository = {
   saveUser: (user: User) => Promise<string>;
   saveAdmin: (user_id: string) => Promise<void>;
   findUser: (user: Partial<User>) => Promise<User | null>;
+  findVoter: (nic: string) => Promise<VoterUpdate | null>;
   promoteUserToAdmin: (user: User) => Promise<void>;
   verifyUser: (user: Partial<User>) => Promise<boolean>;
   verifyUserWithRole: (user: Partial<User>) => Promise<boolean>;
@@ -127,6 +128,22 @@ export function getUserRepository({
     return await db.findUser(user);
   }
 
+  async function findVoter(nic: string): Promise<VoterUpdate | null> {
+    logger?.debug(`Finding voter with nic [${nic}] in the database.`);
+    const voter = await db.findVoter({ nic });
+    if (voter) {
+      return {
+        nic: voter.nic,
+        fullname: voter.fullname,
+        dob: voter.dob,
+        email: voter.email,
+        gender: voter.gender,
+      };
+    } else {
+      return voter; // the null case
+    }
+  }
+
   async function updateVoter(voter: VoterUpdate): Promise<UpdateStatus> {
     logger?.debug(`Updating voter with id [${voter.nic}] in the database.`);
     const exists: Voter | null = await db.findVoter({ nic: voter.nic });
@@ -162,6 +179,7 @@ export function getUserRepository({
     verifyUserWithRole,
     deleteVoter,
     findUser,
+    findVoter,
     updateVoter,
     getAllVoters,
   };

@@ -134,9 +134,7 @@ function setupVoterUpdate({ router, repo, logger }: EndpointSetupRequirements) {
     const token = req.headers["authorization"]?.split(" ")[1];
     const verification = await verifyToken(repo, token);
     if (verification) {
-      console.log("received voter for update: ", req.body);
       const voterSubmission = VoterUpdateSchema.safeParse(req.body);
-      console.log("parsed voter for update: ", voterSubmission);
       if (voterSubmission.success) {
         try {
           const result = await repo.updateVoter(voterSubmission.data);
@@ -175,6 +173,24 @@ function setupVoterFetch({ router, repo, logger }: EndpointSetupRequirements) {
     if (verification) {
       const voters = await repo.getAllVoters();
       res.status(200).json(voters);
+    } else {
+      res.status(401).json({
+        message: "Not authenticated",
+      });
+    }
+  });
+
+  router.get("/voter/:id", async (req, res) => {
+    logger?.debug("Handling voter fetch.");
+    const token = req.headers["authorization"]?.split(" ")[1];
+    const verification = await verifyToken(repo, token);
+    if (verification) {
+      const voter = await repo.findVoter(req.params.id);
+      if (voter) {
+        res.status(200).json(voter);
+      } else {
+        res.status(404);
+      }
     } else {
       res.status(401).json({
         message: "Not authenticated",

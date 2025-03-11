@@ -172,7 +172,6 @@ export default function loadConfig(options?: TestFVSConfig): FVSConfig {
       fvsConfig.environment = process.env.FVS_ENVIRONMENT as Environment;
     }
   }
-  console.debug("environment", fvsConfig.environment);
 
   if (options && options.database_uri) {
     fvsConfig.database_uri = options.database_uri;
@@ -206,7 +205,6 @@ export default function loadConfig(options?: TestFVSConfig): FVSConfig {
 
 export async function loadAdminCredentials(config: FVSConfig) {
   const db = configureDatabase(config.environment);
-  console.debug("db setup: ", db);
   const hashedPassword = await crypto.preparePassword(
     config.adminCredentials.password,
     10,

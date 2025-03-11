@@ -2,7 +2,6 @@ import getApplication from "./index";
 
 // load the configuration
 const { config, app } = getApplication();
-console.log("server db url:", config.database_uri);
 
 // starts the server and listens on the configured ports.
 app.listen(config.network.port, config.network.host, () => {
