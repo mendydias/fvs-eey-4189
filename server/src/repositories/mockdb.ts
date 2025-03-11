@@ -1,4 +1,4 @@
-import { User, Voter, Admin } from "src/models/registration-models";
+import { User, Voter, Admin, Role } from "src/models/registration-models";
 
 const voters: Map<string, Voter> = new Map();
 const admins: Map<string, Admin> = new Map();
@@ -20,8 +20,8 @@ const saveAdmin = async (user_id: string) => {
   return user_id;
 };
 
-const saveUser = async (email: string, password: string) => {
-  users.set(email, { email, password });
+const saveUser = async (email: string, password: string, role: Role) => {
+  users.set(email, { email, password, role });
   console.log("Inside save user, db", users);
   return email;
 };
@@ -37,9 +37,39 @@ const findUser = async (user: Partial<User>) => {
   return null;
 };
 
+const findVoter = async (voter: Partial<Voter>) => {
+  console.log("Inside find voter, db", voters);
+  if (voter && voter.nic) {
+    const dbVoter = voters.get(voter.nic);
+    if (dbVoter) {
+      return dbVoter;
+    }
+  }
+  return null;
+};
+
+const deleteVoter = async (voter: Partial<Voter>) => {
+  console.log("Inside delete voter, db", voters);
+  if (voter && voter.nic) {
+    return voters.delete(voter.nic); // this will return false if the voter doesn't exist
+  }
+  return false;
+};
+
+const deleteUser = async (user: Partial<User>) => {
+  console.log("Inside delete user, db", users);
+  if (user && user.email) {
+    return users.delete(user.email); // this will return false if the user doesn't exist
+  }
+  return false;
+};
+
 export default {
   saveVoter,
   saveAdmin,
   saveUser,
   findUser,
+  findVoter,
+  deleteVoter,
+  deleteUser,
 };

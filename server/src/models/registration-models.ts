@@ -14,6 +14,7 @@ export const VoterSchema = z.object({
       "Gender must be a string containing either 'm', 'f', or 'o'",
   }),
   email: z.string().email(),
+  password: z.string(),
 });
 
 export const UserSchema = z.object({
@@ -30,6 +31,12 @@ export const AdminSchema = z.object({
   }),
 });
 
-export type User = z.infer<typeof UserSchema>;
+export type Role = "voter" | "admin" | "candidate";
+export type User = {
+  _id?: string;
+  email: string;
+  password: string;
+  role: Role;
+};
 export type Voter = z.infer<typeof VoterSchema>;
 export type Admin = z.infer<typeof AdminSchema>;

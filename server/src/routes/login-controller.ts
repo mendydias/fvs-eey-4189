@@ -41,10 +41,13 @@ function setupLoginEndpoint(
       const outcome = await repo.verifyUser(userParseResult.data);
       logger?.debug("User verification outcome: " + outcome);
       if (outcome) {
-        const user: User = userParseResult.data;
-        res.status(200).json({
-          token: await crypto.signToken(user, "fvs.com", "api.fvs.com"),
-        });
+        const submittedUser = userParseResult.data;
+        const user = await repo.findUser({ email: submittedUser.email });
+        if (user != null) {
+          res.status(200).json({
+            token: await crypto.signToken(user, "fvs.com", "api.fvs.com"),
+          });
+        }
       } else {
         logger?.error("User verification failed.");
         res.status(401).json({

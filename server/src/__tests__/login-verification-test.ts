@@ -12,7 +12,10 @@ describe("Login verification tests", function () {
     const config = loadConfig({ environment: "TESTING" });
     await loadAdminCredentials(config);
     const repo = getUserRepository(config);
-    const outcome = await repo.verifyUser(defaultCredentials);
+    const outcome = await repo.verifyUser({
+      ...defaultCredentials,
+      role: "admin",
+    });
     expect(outcome).toBe(true);
   });
 
@@ -23,6 +26,7 @@ describe("Login verification tests", function () {
     const outcome = await repo.verifyUser({
       email: "admin@admin.com",
       password: "wrongpassword",
+      role: "admin",
     });
     expect(outcome).toBe(false);
   });

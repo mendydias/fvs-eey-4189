@@ -8,6 +8,7 @@ import { mkdirSync, existsSync } from "fs";
 import path from "path";
 import configureDatabase from "./repositories/db";
 import * as crypto from "./repositories/crypto";
+import { Role } from "./models/registration-models";
 
 type NetworkConfig = {
   host: string;
@@ -22,6 +23,7 @@ type LoggingPaths = {
 type AdminCredentials = {
   user: string;
   password: string;
+  role: Role;
 };
 
 export type Environment = "DEVELOPMENT" | "PRODUCTION" | "TESTING";
@@ -61,7 +63,10 @@ export default function loadConfig(options?: TestFVSConfig): FVSConfig {
     logger: undefined,
     database_uri: "",
     environment: "DEVELOPMENT",
-    adminCredentials: defaultAdminCredentials,
+    adminCredentials: {
+      ...defaultAdminCredentials,
+      role: "admin",
+    },
   };
 
   // Load all the needed environment variables.
@@ -191,6 +196,7 @@ export default function loadConfig(options?: TestFVSConfig): FVSConfig {
       fvsConfig.adminCredentials = {
         user: process.env.FVS_ADMIN_USER,
         password: process.env.FVS_ADMIN_PASSWORD,
+        role: "admin",
       };
     }
   }
@@ -208,6 +214,7 @@ export async function loadAdminCredentials(config: FVSConfig) {
   const user_id = await db.saveUser(
     config.adminCredentials.user,
     hashedPassword,
+    "admin",
   );
   if (user_id != null) {
     await db.saveAdmin(user_id);

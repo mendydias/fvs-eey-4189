@@ -9,6 +9,7 @@ import getUserRepository, {
   type UserRepository,
 } from "../repositories/user-repository";
 import winston from "winston";
+import * as crypto from "../repositories/crypto";
 
 export default function getUserRegistrationRouter(config: FVSConfig) {
   const { logger } = config;
@@ -17,6 +18,7 @@ export default function getUserRegistrationRouter(config: FVSConfig) {
 
   // registration endpoints
   setupVoterRegistration(router, repo, logger);
+  setupVoterDeletion(router, repo, logger);
 
   return router;
 }
@@ -75,6 +77,50 @@ function setupVoterRegistration(
       res.status(400).json({
         message:
           "Failed to register voter. Voter request body malformed. Please contact the admin.",
+      });
+    }
+  });
+}
+
+function setupVoterDeletion(
+  router: Router,
+  repo: UserRepository,
+  logger?: winston.Logger,
+) {
+  router.delete("/voter/:id", async (req, res) => {
+    logger?.debug("Handling voter deletion.");
+    const voterId = req.params.id;
+    const token = req.headers["authorization"]?.split(" ")[1];
+    if (token) {
+      const decoded = await crypto.verifyToken(token);
+      if (decoded) {
+        const verification = await repo.verifyUserWithRole({
+          email: decoded.sub,
+          role: decoded.role,
+        });
+        if (verification) {
+          try {
+            const result = await repo.deleteVoter(voterId);
+            if (result.ok) {
+              res.status(200).json({
+                deletedId: voterId,
+              });
+            } else {
+              res.status(404).json({
+                deletedId: voterId,
+                status: "not found",
+              });
+            }
+          } catch (error) {
+            logger?.error(
+              `Error deleting voter with id [${req.params.id}]: ${error}`,
+            );
+          }
+        }
+      }
+    } else {
+      res.status(401).json({
+        message: "Not authenticated",
       });
     }
   });

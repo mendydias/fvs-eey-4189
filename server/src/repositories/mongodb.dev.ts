@@ -1,7 +1,7 @@
 import { MongoClient, ServerApiVersion } from "mongodb";
 import { DuplicateKeyError } from "./errors";
 import loadConfig from "../config";
-import { Admin, User, Voter } from "src/models/registration-models";
+import { Admin, Role, User, Voter } from "src/models/registration-models";
 
 const { logger, database_uri } = loadConfig();
 
@@ -64,6 +64,7 @@ async function saveAdmin(user_id: string): Promise<any> {
 async function saveUser(
   email: string,
   password: string,
+  role: Role,
 ): Promise<string | null> {
   try {
     logger?.debug(`Saving ${email} to database.`);
@@ -71,6 +72,7 @@ async function saveUser(
       _id: email,
       email,
       password,
+      role,
     });
     logger?.debug(result.insertedId);
     return result.insertedId;
@@ -90,10 +92,37 @@ async function findUser(user: Partial<User>): Promise<User | null> {
       return {
         email: dbUser.email,
         password: dbUser.password,
+        role: dbUser.role,
       };
     }
   }
   return null;
+}
+
+async function findVoter(voter: Partial<Voter>): Promise<Voter | null> {
+  if (voter && voter.nic) {
+    const dbVoter = await db.collection<Voter>(VOTERS).findOne(voter);
+    if (dbVoter != null) {
+      return dbVoter;
+    }
+  }
+  return null;
+}
+
+async function deleteUser(user: Partial<User>): Promise<boolean> {
+  if (user && user.email) {
+    const result = await db.collection<User>(USERS).deleteOne(user);
+    return result.deletedCount === 1;
+  }
+  return false;
+}
+
+async function deleteVoter(voter: Partial<Voter>): Promise<boolean> {
+  if (voter && voter.nic) {
+    const result = await db.collection<Voter>(VOTERS).deleteOne(voter);
+    return result.deletedCount === 1;
+  }
+  return false;
 }
 
 export default {
@@ -101,4 +130,7 @@ export default {
   saveAdmin,
   saveUser,
   findUser,
+  findVoter,
+  deleteUser,
+  deleteVoter,
 };
