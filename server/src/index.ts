@@ -13,6 +13,11 @@ export default function getApplication(environment?: Environment) {
   // json parser ensures the content-type is set correctly and also that the post bodies are correctly parsed.
   app.use(bodyParser.json());
 
+  // default handshake handler
+  app.get("/", (req, res) => {
+    res.status(200).send("Hello World!");
+  });
+
   // routers
   const config =
     environment === undefined ? loadConfig() : loadConfig({ environment });

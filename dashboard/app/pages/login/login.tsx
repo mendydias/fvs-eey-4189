@@ -18,6 +18,7 @@ import { useActionData } from "react-router";
 import { useForm } from "@conform-to/react";
 import type { Route } from "../../+types/root";
 import { loginSchema } from "~/services/auth-service";
+import * as authService from "~/services/auth-service";
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();
@@ -27,8 +28,7 @@ export async function action({ request }: Route.ActionArgs) {
   if (submission.status !== "success") {
     return submission.reply();
   }
-
-  // TODO: implement check login ok logic
+  await authService.login(submission.value);
   return redirect("/dashboard");
 }
 

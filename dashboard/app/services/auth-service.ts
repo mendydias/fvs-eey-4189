@@ -10,4 +10,24 @@ export const loginSchema = z.object({
 
 type User = z.infer<typeof loginSchema>;
 
-export async function login(credentials: User) {}
+export async function login(credentials: User) {
+  const endpoint = `${endpoints.base.host}:${endpoints.base.port}${endpoints.login.endpoint}`;
+  const payload = {
+    method: endpoints.login.method,
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(credentials),
+  };
+  const response = await fetch(endpoint, payload);
+  if (response.ok) {
+    const json = await response.json();
+    if (json.token) {
+      return json.token;
+    } else {
+      throw new Error("Invalid response from login service.");
+    }
+  } else {
+    return "unauthenticated";
+  }
+}

@@ -4,12 +4,11 @@
   "main": "index.js",
   "scripts": {
     "build": "tsc --project tsconfig.json && tsc-alias tsconfig.json",
-    "dev": "nodemon -r src/server.ts",
+    "dev": "nodemon",
     "test": "jest"
   },
   "keywords": [],
   "author": "",
-  "type": "module",
   "license": "ISC",
   "description": "",
   "dependencies": {

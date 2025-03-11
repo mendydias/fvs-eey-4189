@@ -5,6 +5,6 @@
   },
   "login": {
     "endpoint": "/auth/login",
-    "method": "POST"
+    "method": "post"
   }
 }
