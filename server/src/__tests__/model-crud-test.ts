@@ -113,5 +113,21 @@ describe("Voter CRUD tests", function () {
     expect(deleteResponse.status).toBe(200);
   });
 
-  it.todo("should return 404 if voter to delete does not exist");
+  it("should return 404 if voter to delete does not exist", async function () {
+    const deleteId = "9101234123sdsxcvll111";
+
+    const { app, config } = getApplication();
+    config.logger?.debug(
+      "Commencing test, model-crud-test.ts: should return 404 if voter to delete does not exist",
+    );
+    const response = await request(app)
+      .post("/auth/login")
+      .send(defaultCredentials);
+    const token = response.body.token;
+
+    const deleteResponse = await request(app)
+      .delete(`/register/voter/${deleteId}`)
+      .set("authorization", `Bearer ${token}`);
+    expect(deleteResponse.status).toBe(404);
+  });
 });
