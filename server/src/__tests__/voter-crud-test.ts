@@ -161,6 +161,12 @@ describe("Voter CRUD tests", function () {
       });
 
     expect(response.status).toBe(201);
+
+    const voterResponse = await request(app)
+      .get("/voter/" + voter.nic)
+      .set("authorization", `Bearer ${loginResponse.body.token}`);
+
+    expect(voterResponse.body).toEqual(voter);
   });
 
   it("should return 401 when trying to update a voter without admin role", async function () {
@@ -244,7 +250,7 @@ describe("Voter CRUD tests", function () {
     expect(response.body.length).toBe(2);
   });
 
-  it.todo("should return 404 when trying to fetch a non-existing voter");
+  it("should return 404 when trying to fetch a non-existing voter", async function () {});
 
   it.todo("should return 401 if a normal voter tries to delete another voter");
 });
