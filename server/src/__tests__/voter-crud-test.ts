@@ -188,7 +188,26 @@ describe("Voter CRUD tests", function () {
     expect(response.status).toBe(401);
   });
 
-  it.todo("should return 404 when trying to update a non-existing voter");
+  it("should return 404 when trying to update a non-existing voter", async function () {
+    const voter = {
+      nic: "abc123312defgh",
+      fullname: "John Doe",
+      dob: "1990-01-01",
+      gender: "m",
+      email: "johndoe@gmail.com",
+    };
+
+    const { app, config } = getApplication();
+    const loginResponse = await request(app)
+      .post("/auth/login")
+      .send(defaultCredentials);
+    const response = await request(app)
+      .put("/register/voter")
+      .set("authorization", `Bearer ${loginResponse.body.token}`)
+      .send(voter);
+
+    expect(response.status).toBe(404);
+  });
 
   it.todo(
     "should return 200 and return an array of voter objects in response to a get call",
