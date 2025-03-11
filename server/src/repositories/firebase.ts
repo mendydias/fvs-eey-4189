@@ -30,7 +30,6 @@
 //   try {
 //     await entityRef.set(entity);
 //   } catch (e: any) {
-//     config.logger?.error(e);
 //
 //     throw e;
 //   }

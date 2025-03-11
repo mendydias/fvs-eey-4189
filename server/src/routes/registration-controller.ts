@@ -3,31 +3,32 @@
  */
 import express, { Router } from "express";
 import { DuplicateKeyError } from "../repositories/errors";
-import { VoterSchema, VoterUpdateSchema } from "../models/registration-models";
+import {
+  Role,
+  VoterSchema,
+  VoterUpdateSchema,
+} from "../models/registration-models";
 import { FVSConfig } from "../config";
 import getUserRepository, {
   type UserRepository,
 } from "../repositories/user-repository";
-import winston from "winston";
-import * as crypto from "../repositories/crypto";
 import { verifyToken } from "./auth-util";
 
 type EndpointSetupRequirements = {
   router: Router;
   repo: UserRepository;
-  logger?: winston.Logger;
+  roles: Role[];
 };
 
 export default function getUserRegistrationRouter(config: FVSConfig) {
-  const { logger } = config;
   const router = express.Router();
   const repo = getUserRepository(config);
 
   // registration endpoints
-  setupVoterRegistration({ router, repo, logger });
-  setupVoterDeletion({ router, repo, logger });
-  setupVoterUpdate({ router, repo, logger });
-  setupVoterFetch({ router, repo, logger });
+  setupVoterRegistration({ router, repo, roles: ["all"] });
+  setupVoterDeletion({ router, repo, roles: ["admin"] });
+  setupVoterUpdate({ router, repo, roles: ["admin"] });
+  setupVoterFetch({ router, repo, roles: ["admin"] });
 
   return router;
 }
@@ -36,23 +37,15 @@ export default function getUserRegistrationRouter(config: FVSConfig) {
 function setupVoterRegistration({
   router,
   repo,
-  logger,
+  roles,
 }: EndpointSetupRequirements) {
   router.post("/voter", async (req, res) => {
     // Parse the request body to get the voter data.
-    logger?.debug("Handling voter registration.");
-
     let result = VoterSchema.safeParse(req.body);
-
-    logger?.debug(
-      `Voter registration body validation result: ${result.success}.`,
-    );
 
     // Check if parsing was successful.
     if (result.success) {
       // Save the user details and send a success message back.
-      logger?.debug("Calling repository to save the voter.");
-
       try {
         let nic = await repo.save(result.data);
         res.status(201).json({
@@ -63,9 +56,6 @@ function setupVoterRegistration({
         });
       } catch (e: any) {
         // This is thrown by the repo if there is an error with the underlying database trying to save data.
-        logger?.error("Sending error response back.");
-        logger?.error(`Error message: ${e.message}`);
-
         if (e instanceof DuplicateKeyError) {
           res.status(409).json({
             message: "Already registered. Please login!",
@@ -78,11 +68,6 @@ function setupVoterRegistration({
         }
       }
     } else {
-      logger?.debug(
-        `Voter registration body validation failed, the following errors manisfested: `,
-      );
-      logger?.error(result.error.issues);
-
       res.status(400).json({
         message:
           "Failed to register voter. Voter request body malformed. Please contact the admin.",
@@ -94,13 +79,13 @@ function setupVoterRegistration({
 function setupVoterDeletion({
   router,
   repo,
-  logger,
+  roles,
 }: EndpointSetupRequirements) {
   router.delete("/voter/:id", async (req, res) => {
-    logger?.debug("Handling voter deletion.");
+    console.log("Called with voterId", req.params.id);
     const voterId = req.params.id;
     const token = req.headers["authorization"]?.split(" ")[1];
-    const verification = await verifyToken(repo, token);
+    const verification = await verifyToken(repo, roles, token);
     if (verification) {
       try {
         const result = await repo.deleteVoter(voterId);
@@ -114,11 +99,7 @@ function setupVoterDeletion({
             status: "not found",
           });
         }
-      } catch (error) {
-        logger?.error(
-          `Error deleting voter with id [${req.params.id}]: ${error}`,
-        );
-      }
+      } catch (error) {}
     } else {
       res.status(401).json({
         message: "Not authenticated",
@@ -127,12 +108,10 @@ function setupVoterDeletion({
   });
 }
 
-function setupVoterUpdate({ router, repo, logger }: EndpointSetupRequirements) {
-  logger?.debug("Setting up voter update endpoint.");
-
+function setupVoterUpdate({ router, repo, roles }: EndpointSetupRequirements) {
   router.put("/voter", async (req, res) => {
     const token = req.headers["authorization"]?.split(" ")[1];
-    const verification = await verifyToken(repo, token);
+    const verification = await verifyToken(repo, roles, token);
     if (verification) {
       const voterSubmission = VoterUpdateSchema.safeParse(req.body);
       if (voterSubmission.success) {
@@ -164,12 +143,10 @@ function setupVoterUpdate({ router, repo, logger }: EndpointSetupRequirements) {
   });
 }
 
-function setupVoterFetch({ router, repo, logger }: EndpointSetupRequirements) {
-  logger?.debug("Setting up voter fetch endpoint.");
-
+function setupVoterFetch({ router, repo, roles }: EndpointSetupRequirements) {
   router.get("/voters", async (req, res) => {
     const token = req.headers["authorization"]?.split(" ")[1];
-    const verification = await verifyToken(repo, token);
+    const verification = await verifyToken(repo, roles, token);
     if (verification) {
       const voters = await repo.getAllVoters();
       res.status(200).json(voters);
@@ -181,9 +158,8 @@ function setupVoterFetch({ router, repo, logger }: EndpointSetupRequirements) {
   });
 
   router.get("/voter/:id", async (req, res) => {
-    logger?.debug("Handling voter fetch.");
     const token = req.headers["authorization"]?.split(" ")[1];
-    const verification = await verifyToken(repo, token);
+    const verification = await verifyToken(repo, roles, token);
     if (verification) {
       const voter = await repo.findVoter(req.params.id);
       if (voter) {

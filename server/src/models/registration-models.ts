@@ -44,7 +44,7 @@ export const AdminSchema = z.object({
   }),
 });
 
-export type Role = "voter" | "admin" | "candidate";
+export type Role = "voter" | "admin" | "candidate" | "all";
 export type User = {
   _id?: string;
   email: string;

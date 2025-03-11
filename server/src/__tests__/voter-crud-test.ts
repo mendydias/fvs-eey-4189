@@ -98,9 +98,6 @@ describe("Voter CRUD tests", function () {
     const deleteId = "abn324234ssdaf";
 
     const { app, config } = getApplication();
-    config.logger?.debug(
-      "Commencing test, model-crud-test.ts: should delete the voter if the bearer token has admin role",
-    );
     await request(app).post("/register/voter").send(voter);
     const response = await request(app)
       .post("/auth/login")
@@ -117,9 +114,6 @@ describe("Voter CRUD tests", function () {
     const deleteId = "9101234123sdsxcvll111";
 
     const { app, config } = getApplication();
-    config.logger?.debug(
-      "Commencing test, model-crud-test.ts: should return 404 if voter to delete does not exist",
-    );
     const response = await request(app)
       .post("/auth/login")
       .send(defaultCredentials);
@@ -270,7 +264,38 @@ describe("Voter CRUD tests", function () {
     });
   });
 
-  it("should return 404 when trying to fetch a non-existing voter", async function () {});
+  it("should return 401 if a normal voter tries to delete another voter", async function () {
+    const voter1 = {
+      nic: "1232423sasdf",
+      fullname: "joe caprice",
+      dob: "1990-01-01",
+      gender: "m",
+      email: "joe@caprice.com",
+      password: "1234password1234",
+    };
 
-  it.todo("should return 401 if a normal voter tries to delete another voter");
+    const voter2 = {
+      nic: "209384axllww",
+      fullname: "joe caprice",
+      dob: "1990-01-01",
+      gender: "m",
+      email: "joe@caprice.com",
+      password: "1234password1234",
+    };
+
+    const { app, config } = getApplication();
+    await request(app).post("/register/voter").send(voter1);
+    await request(app).post("/register/voter").send(voter2);
+
+    const loginResponse = await request(app).post("/auth/login").send({
+      email: voter1.email,
+      password: voter1.password,
+    });
+
+    const response = await request(app)
+      .delete(`/register/voter/${voter2.nic}`)
+      .set("authorization", "Bearer " + loginResponse.body.token);
+
+    expect(response.status).toBe(401);
+  });
 });

@@ -9,7 +9,7 @@ import {
   VoterUpdate,
 } from "src/models/registration-models";
 
-const { logger, database_uri } = loadConfig();
+const { database_uri } = loadConfig();
 
 const client = new MongoClient(database_uri, {
   serverApi: {
@@ -26,15 +26,12 @@ const USERS = "users";
 const ADMINS = "admins";
 
 async function saveVoter(voter: Voter): Promise<any> {
-  logger?.debug(`Saving ${voter.nic}:${voter.fullname} to database.`);
   try {
     let result = await db
       .collection<Voter>(VOTERS)
       .insertOne({ _id: voter.nic, ...voter });
-    logger?.debug(result.insertedId);
     return result.insertedId;
   } catch (error: any) {
-    logger?.error(error);
     if (error.code === 11000) {
       throw new DuplicateKeyError(voter.nic);
     }
@@ -42,7 +39,6 @@ async function saveVoter(voter: Voter): Promise<any> {
 }
 
 async function saveAdmin(user_id: string): Promise<any> {
-  logger?.debug(`Saving ${user_id} as admin to database.`);
   const date_registered = new Date();
   try {
     let user = await db.collection<User>(USERS).findOne({ nic: user_id });
@@ -54,13 +50,11 @@ async function saveAdmin(user_id: string): Promise<any> {
           email: user.email,
         },
       });
-      logger?.debug(result.insertedId);
       return result.insertedId;
     } else {
       return null;
     }
   } catch (error: any) {
-    logger?.error(error);
     if (error.code === 11000) {
       throw new DuplicateKeyError(user_id);
     }
@@ -73,17 +67,14 @@ async function saveUser(
   role: Role,
 ): Promise<string | null> {
   try {
-    logger?.debug(`Saving ${email} to database.`);
     let result = await db.collection<User>(USERS).insertOne({
       _id: email,
       email,
       password,
       role,
     });
-    logger?.debug(result.insertedId);
     return result.insertedId;
   } catch (error: any) {
-    logger?.error(error);
     if (error.code === 11000) {
       throw new DuplicateKeyError(email);
     }
