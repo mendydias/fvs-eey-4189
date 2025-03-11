@@ -5,7 +5,7 @@ import { z } from "zod";
 
 export const VoterSchema = z.object({
   _id: z.optional(z.string()),
-  nic: z.string().min(10),
+  nic: z.string(),
   fullname: z.string(),
   dob: z.string().date(),
   gender: z.enum(["m", "f", "o"], {

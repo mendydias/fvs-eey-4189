@@ -1,7 +1,7 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
     "build": "tsc --project tsconfig.json && tsc-alias tsconfig.json",
     "dev": "nodemon",
