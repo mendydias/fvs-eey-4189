@@ -1,16 +1,30 @@
 import { User, Voter, Admin, Role } from "src/models/registration-models";
+import { DuplicateKeyError } from "./errors";
 
-const voters: Map<string, Voter> = new Map();
-const admins: Map<string, Admin> = new Map();
-const users: Map<string, User> = new Map();
+let voters: Map<string, Voter> = new Map();
+let admins: Map<string, Admin> = new Map();
+let users: Map<string, User> = new Map();
+
+export function clearDb() {
+  console.log("Clearing db");
+  voters = new Map();
+  admins = new Map();
+  users = new Map();
+}
 
 const saveVoter = async (voter: Voter) => {
+  if (voters.has(voter.nic)) {
+    throw new DuplicateKeyError(voter.nic);
+  }
   voters.set(voter.nic, { _id: voter.nic, ...voter });
   console.log("Inside save voter, db", voters);
   return voter.nic;
 };
 
 const saveAdmin = async (user_id: string) => {
+  if (admins.has(user_id)) {
+    throw new DuplicateKeyError(user_id);
+  }
   const user = users.get(user_id);
   admins.set(user_id, {
     date_registered: new Date(),
@@ -21,6 +35,9 @@ const saveAdmin = async (user_id: string) => {
 };
 
 const saveUser = async (email: string, password: string, role: Role) => {
+  if (users.has(email)) {
+    throw new DuplicateKeyError(email);
+  }
   users.set(email, { email, password, role });
   console.log("Inside save user, db", users);
   return email;

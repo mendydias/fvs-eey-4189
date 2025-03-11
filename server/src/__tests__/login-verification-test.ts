@@ -1,6 +1,7 @@
-import { describe, expect, it } from "@jest/globals";
+import { beforeEach, describe, expect, it } from "@jest/globals";
 import loadConfig, { loadAdminCredentials } from "../config";
 import getUserRepository from "../repositories/user-repository";
+import { clearDb } from "../repositories/mockdb";
 
 const defaultCredentials = {
   email: "admin@admin.com",
@@ -8,6 +9,10 @@ const defaultCredentials = {
 };
 
 describe("Login verification tests", function () {
+  beforeEach(() => {
+    clearDb();
+  });
+
   it("should correctly verify the login credentials", async function () {
     const config = loadConfig({ environment: "TESTING" });
     await loadAdminCredentials(config);

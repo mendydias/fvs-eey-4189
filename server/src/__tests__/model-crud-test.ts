@@ -1,9 +1,14 @@
-import { describe, expect, it } from "@jest/globals";
+import { beforeEach, describe, expect, it } from "@jest/globals";
 import { type Voter } from "../models/registration-models";
 import request from "supertest";
 import getApplication from "../index";
+import { clearDb } from "../repositories/mockdb";
 
 describe("Voter CRUD tests", function () {
+  beforeEach(() => {
+    clearDb();
+  });
+
   it("should create a voter", async () => {
     const voter: Voter = {
       nic: "123456789",
@@ -32,7 +37,30 @@ describe("Voter CRUD tests", function () {
     expect(response.status).toBe(400);
   });
 
-  it.todo("should send back 40 if duplicate voter");
+  it("should send back 409 if duplicate voter", async function () {
+    const voter1: Voter = {
+      nic: "09887878899",
+      fullname: "John Doe",
+      dob: "1990-01-01",
+      gender: "m",
+      email: "johndoe@example.com",
+      password: "1234password1234",
+    };
+
+    const voter2: Voter = {
+      nic: "09887878899",
+      fullname: "John Doe",
+      dob: "1990-01-01",
+      gender: "m",
+      email: "johndoe@example.com",
+      password: "1234password1234",
+    };
+
+    const { app, config } = getApplication("TESTING");
+    await request(app).post("/register/voter").send(voter1);
+    const response = await request(app).post("/register/voter").send(voter2);
+    expect(response.status).toBe(409);
+  });
 
   it("should send back 401 if tried to delete without admin role", async () => {
     const voter = {

@@ -7,6 +7,8 @@ import {
   LoginResponseSchema,
 } from "../routes/login-controller";
 import request from "supertest";
+import { beforeEach } from "node:test";
+import { clearDb } from "../repositories/mockdb";
 
 const defaultCredentials = {
   email: "admin@admin.com",
@@ -14,8 +16,13 @@ const defaultCredentials = {
 };
 
 describe("Test exposed endpoint for admin authentication", function () {
+  beforeEach(() => {
+    clearDb();
+  });
+
+  const { config, app } = getApplication("TESTING");
+
   it("should return a 200 status code and have the correct shape when authenticating with the correct credentials", async function () {
-    const { config, app } = getApplication("TESTING");
     const response = await request(app)
       .post("/auth/login")
       .send(defaultCredentials);
@@ -27,7 +34,6 @@ describe("Test exposed endpoint for admin authentication", function () {
   });
 
   it("should return a 401 status code and have the correct shape when authenticating with the incorrect credentials", async function () {
-    const { config, app } = getApplication("TESTING");
     const response = await request(app)
       .post("/auth/login")
       .send({ email: defaultCredentials.email, password: "wrongpassword" });

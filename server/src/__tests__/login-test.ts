@@ -14,7 +14,7 @@ jest.mock("../repositories/mockdb.ts", () => ({
   saveUser: jest.fn(() => "user_1"),
   verifyUser: jest.fn(),
 }));
-import mockdbTest from "../repositories/mockdb";
+import mockdbTest, { clearDb } from "../repositories/mockdb";
 const mockdbTestMock = mockdbTest as jest.MockedObject<typeof mockdbTest>;
 
 const defaultAdmin = "admin@admin.com";

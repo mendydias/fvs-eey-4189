@@ -58,7 +58,7 @@ function setupVoterRegistration(
         logger?.error(`Error message: ${e.message}`);
 
         if (e instanceof DuplicateKeyError) {
-          res.status(401).json({
+          res.status(409).json({
             message: "Already registered. Please login!",
           });
         } else {
