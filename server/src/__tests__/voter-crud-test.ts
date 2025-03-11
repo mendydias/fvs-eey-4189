@@ -209,9 +209,35 @@ describe("Voter CRUD tests", function () {
     expect(response.status).toBe(404);
   });
 
-  it.todo(
-    "should return 200 and return an array of voter objects in response to a get call",
-  );
+  it("should return 200 and return an array of voter objects in response to a get call", async function () {
+    const voter1 = {
+      nic: "kk123412asds009911",
+      fullname: "John Doe",
+      dob: "1990-01-01",
+      gender: "m",
+      email: "johndoe@example.com",
+      password: "1234password1234",
+    };
+
+    const voter2 = {
+      nic: "opwierppasdfas192034",
+      fullname: "Jane Doe",
+      dob: "1992-08-24",
+      email: "janedoe@example.com",
+      gender: "f",
+      password: "1234password1234",
+    };
+
+    const { app, config } = getApplication();
+    await request(app).post("/register/voter").send(voter1);
+    await request(app).post("/register/voter").send(voter2);
+
+    const response = await request(app).get("/register/voters");
+    expect(response.status).toBe(200);
+    expect(response.body.length).toBe(2);
+    expect(response.body).toContainEqual(voter1);
+    expect(response.body).toContainEqual(voter2);
+  });
 
   it.todo("should return 404 when trying to fetch a non-existing voter");
 
