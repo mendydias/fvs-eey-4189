@@ -98,6 +98,9 @@ describe("Voter CRUD tests", function () {
     const deleteId = "abn324234ssdaf";
 
     const { app, config } = getApplication();
+    config.logger?.debug(
+      "Commencing test, model-crud-test.ts: should delete the voter if the bearer token has admin role",
+    );
     await request(app).post("/register/voter").send(voter);
     const response = await request(app)
       .post("/auth/login")
