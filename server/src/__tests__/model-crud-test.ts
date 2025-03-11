@@ -4,6 +4,11 @@ import request from "supertest";
 import getApplication from "../index";
 import { clearDb } from "../repositories/mockdb";
 
+const defaultCredentials = {
+  email: "admin@admin.com",
+  password: "admin",
+};
+
 describe("Voter CRUD tests", function () {
   beforeEach(() => {
     clearDb();
@@ -80,7 +85,30 @@ describe("Voter CRUD tests", function () {
     expect(response.status).toBe(401);
   });
 
-  it.todo("should delete the voter if the bearer token has admin role");
+  it("should delete the voter if the bearer token has admin role", async function () {
+    const voter = {
+      nic: "abn324234ssdaf",
+      fullname: "John Doe",
+      dob: "1990-01-01",
+      gender: "m",
+      email: "johndoe@example.com",
+      password: "password123",
+    };
+
+    const deleteId = "abn324234ssdaf";
+
+    const { app, config } = getApplication();
+    await request(app).post("/register/voter").send(voter);
+    const response = await request(app)
+      .post("/auth/login")
+      .send(defaultCredentials);
+    const token = response.body.token;
+
+    const deleteResponse = await request(app)
+      .delete(`/register/voter/${deleteId}`)
+      .set("authorization", `Bearer ${token}`);
+    expect(deleteResponse.status).toBe(200);
+  });
 
   it.todo("should return 404 if voter to delete does not exist");
 });
