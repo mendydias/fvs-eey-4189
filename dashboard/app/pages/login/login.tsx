@@ -17,13 +17,7 @@ import { getZodConstraint, parseWithZod } from "@conform-to/zod";
 import { useActionData } from "react-router";
 import { useForm } from "@conform-to/react";
 import type { Route } from "../../+types/root";
-
-const loginSchema = z.object({
-  email: z
-    .string({ required_error: "Email address cannot be empty." })
-    .email("Email address is invalid."),
-  password: z.string({ required_error: "Password cannot be empty." }).max(50),
-});
+import { loginSchema } from "~/services/auth-service";
 
 export async function action({ request }: Route.ActionArgs) {
   const formData = await request.formData();

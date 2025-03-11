@@ -1,0 +1,10 @@
+{
+  "base": {
+    "host": "http://localhost",
+    "port": "8100"
+  },
+  "login": {
+    "endpoint": "/auth/login",
+    "method": "POST"
+  }
+}
