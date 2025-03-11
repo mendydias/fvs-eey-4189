@@ -130,4 +130,16 @@ describe("Voter CRUD tests", function () {
       .set("authorization", `Bearer ${token}`);
     expect(deleteResponse.status).toBe(404);
   });
+
+  it.todo("should return 201 when updating an existing voter");
+
+  it.todo("should return 404 when trying to update a non-existing voter");
+
+  it.todo(
+    "should return 200 and return an array of voter objects in response to a get call",
+  );
+
+  it.todo("should return 200 and return the specific voter");
+
+  it.todo("should return 404 when trying to fetch a non-existing voter");
 });
