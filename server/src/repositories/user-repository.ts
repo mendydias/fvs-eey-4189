@@ -92,9 +92,7 @@ export function getUserRepository({ environment }: FVSConfig): UserRepository {
   }
 
   async function deleteVoter(voterId: string): Promise<DeletionStatus> {
-    console.log("Called with voterId", voterId);
     const voter: Voter | null = await db.findVoter({ nic: voterId });
-    console.log("Found voter", voter);
     if (voter) {
       const user: User | null = await db.findUser({ email: voter.email });
       if (user) {

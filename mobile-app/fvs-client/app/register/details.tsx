@@ -62,11 +62,8 @@ export default function RegisterDetailsPage() {
               inputMode="text"
               mode="text"
               secure={false}
+              errorMessage={errors.nic && touched.nic ? errors.nic : undefined}
             />
-            {
-              // TODO: Replace this with a custom error message component
-            }
-            {errors.nic && touched.nic && <Text>{errors.nic}</Text>}
             <FormInput
               placeholder="Full name"
               label="Full name"
@@ -75,10 +72,12 @@ export default function RegisterDetailsPage() {
               inputMode="text"
               mode="text"
               secure={false}
+              errorMessage={
+                errors.fullname && touched.fullname
+                  ? errors.fullname
+                  : undefined
+              }
             />
-            {errors.fullname && touched.fullname && (
-              <Text>{errors.fullname}</Text>
-            )}
             <FormInput
               label="Date of birth"
               value={new Date(values.dob)} // Formik stores all form values as strings unless a type is passed
@@ -100,8 +99,10 @@ export default function RegisterDetailsPage() {
               inputMode="email"
               mode="text"
               secure={false}
+              errorMessage={
+                errors.email && touched.email ? errors.email : undefined
+              }
             />
-            {errors.email && touched.email && <Text>{errors.email}</Text>}
             <Button
               label="Register!"
               viewVariant="primary"

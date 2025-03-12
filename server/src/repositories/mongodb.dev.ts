@@ -3,6 +3,7 @@ import { DuplicateKeyError } from "./errors";
 import loadConfig from "../config";
 import {
   Admin,
+  Election,
   Role,
   User,
   Voter,
@@ -24,6 +25,7 @@ const db = client.db("fvs");
 const VOTERS = "voters";
 const USERS = "users";
 const ADMINS = "admins";
+const ELECTIONS = "elections";
 
 async function saveVoter(voter: Voter): Promise<any> {
   try {
@@ -159,6 +161,17 @@ async function findAllVoters(): Promise<VoterUpdate[]> {
   }));
 }
 
+async function createElection(election: Election): Promise<any> {
+  try {
+    const result = await db
+      .collection<Election>(ELECTIONS)
+      .insertOne({ _id: election.title, ...election });
+    return result.insertedId;
+  } catch (error: any) {
+    console.log(error);
+  }
+}
+
 export default {
   saveVoter,
   saveAdmin,
@@ -170,4 +183,5 @@ export default {
   updateUser,
   updateVoter,
   findAllVoters,
+  createElection,
 };

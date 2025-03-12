@@ -1,14 +1,22 @@
-import { User, Voter, Admin, Role } from "src/models/registration-models";
+import {
+  User,
+  Voter,
+  Admin,
+  Role,
+  Election,
+} from "../models/registration-models";
 import { DuplicateKeyError } from "./errors";
 
 let voters: Map<string, Voter> = new Map();
 let admins: Map<string, Admin> = new Map();
 let users: Map<string, User> = new Map();
+let elections: Map<string, Election> = new Map();
 
 export function clearDb() {
   voters = new Map();
   admins = new Map();
   users = new Map();
+  elections = new Map();
 }
 
 const saveVoter = async (voter: Voter) => {
@@ -108,6 +116,11 @@ const findAllVoters = async () => {
   }));
 };
 
+const createElection = async (election: Election) => {
+  elections.set(election.title, { ...election, _id: election.title });
+  return election.title;
+};
+
 export default {
   saveVoter,
   saveAdmin,
@@ -119,4 +132,5 @@ export default {
   updateVoter,
   updateUser,
   findAllVoters,
+  createElection,
 };

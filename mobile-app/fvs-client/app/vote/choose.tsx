@@ -9,6 +9,17 @@ import Heading from "../../components/Heading";
 import Typography from "../../components/Typography";
 import Button from "../../components/Button";
 import IconButton from "../../components/IconButton";
+import { router } from "expo-router";
+import * as LocalAuthentication from "expo-local-authentication";
+
+async function handleVote(url: string) {
+  const result = await LocalAuthentication.authenticateAsync({
+    promptMessage: "Please authenticate to vote",
+  });
+  if (result.success) {
+    router.push(url);
+  }
+}
 
 export default function ChooseCandidatePage() {
   return (
@@ -37,7 +48,9 @@ export default function ChooseCandidatePage() {
             label="Vote"
             textVariant="primaryText"
             viewVariant="primary"
-            link="/vote/result?status=1&candidate=candidate 1"
+            onPress={() =>
+              handleVote("/vote/result?status=0&candidate=candidate 1")
+            }
           />
         </View>
         <Heading level={2} text="Candidate 2" />
@@ -50,7 +63,9 @@ export default function ChooseCandidatePage() {
             label="Vote"
             viewVariant="primary"
             textVariant="primaryText"
-            link="/vote/result?status=0&candidate=candidate 2"
+            onPress={() =>
+              handleVote("/vote/result?status=0&candidate=candidate 2")
+            }
           />
         </View>
       </ScrollView>

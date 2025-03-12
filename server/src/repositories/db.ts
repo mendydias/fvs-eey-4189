@@ -1,4 +1,10 @@
-import { Role, User, Voter, VoterUpdate } from "src/models/registration-models";
+import {
+  Election,
+  Role,
+  User,
+  Voter,
+  VoterUpdate,
+} from "../models/registration-models";
 import firebasedb from "./firebase";
 import mockdbTest from "./mockdb";
 import mongodbDev from "./mongodb.dev";
@@ -18,6 +24,7 @@ type Database = {
   updateVoter: (filter: any, updateDoc: any) => Promise<number>;
   updateUser: (filter: any, updateDoc: any) => Promise<number>;
   findAllVoters: () => Promise<VoterUpdate[]>;
+  createElection: (election: Election) => Promise<string>;
 };
 
 export default function configureDatabase(

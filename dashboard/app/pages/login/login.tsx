@@ -28,8 +28,8 @@ export async function action({ request }: Route.ActionArgs) {
   if (submission.status !== "success") {
     return submission.reply();
   }
-  await authService.login(submission.value);
-  return redirect("/dashboard");
+  const token = await authService.login(submission.value);
+  return authService.storeToken(request, token);
 }
 
 export default function LoginPage() {

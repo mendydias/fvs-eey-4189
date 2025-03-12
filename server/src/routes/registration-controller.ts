@@ -4,6 +4,7 @@
 import express, { Router } from "express";
 import { DuplicateKeyError } from "../repositories/errors";
 import {
+  ElectionSchema,
   Role,
   VoterSchema,
   VoterUpdateSchema,
@@ -13,6 +14,10 @@ import getUserRepository, {
   type UserRepository,
 } from "../repositories/user-repository";
 import { verifyToken } from "./auth-util";
+import {
+  ElectionRepository,
+  getElectionRepository,
+} from "../repositories/election-repository";
 
 type EndpointSetupRequirements = {
   router: Router;
@@ -20,15 +25,31 @@ type EndpointSetupRequirements = {
   roles: Role[];
 };
 
+type ElectionEndpointSetupRequirements = {
+  router: Router;
+  userRepo: UserRepository;
+  repo: ElectionRepository;
+  roles: Role[];
+};
+
 export default function getUserRegistrationRouter(config: FVSConfig) {
   const router = express.Router();
   const repo = getUserRepository(config);
+  const electionRepo = getElectionRepository(config);
 
-  // registration endpoints
+  // voter endpoints
   setupVoterRegistration({ router, repo, roles: ["all"] });
   setupVoterDeletion({ router, repo, roles: ["admin"] });
   setupVoterUpdate({ router, repo, roles: ["admin"] });
   setupVoterFetch({ router, repo, roles: ["admin"] });
+
+  // election endpoints
+  setupElectionCreation({
+    router,
+    repo: electionRepo,
+    userRepo: repo,
+    roles: ["admin"],
+  });
 
   return router;
 }
@@ -40,6 +61,7 @@ function setupVoterRegistration({
   roles,
 }: EndpointSetupRequirements) {
   router.post("/voter", async (req, res) => {
+    console.log(req.body);
     // Parse the request body to get the voter data.
     let result = VoterSchema.safeParse(req.body);
 
@@ -68,6 +90,7 @@ function setupVoterRegistration({
         }
       }
     } else {
+      console.log(result.error);
       res.status(400).json({
         message:
           "Failed to register voter. Voter request body malformed. Please contact the admin.",
@@ -82,7 +105,6 @@ function setupVoterDeletion({
   roles,
 }: EndpointSetupRequirements) {
   router.delete("/voter/:id", async (req, res) => {
-    console.log("Called with voterId", req.params.id);
     const voterId = req.params.id;
     const token = req.headers["authorization"]?.split(" ")[1];
     const verification = await verifyToken(repo, roles, token);
@@ -166,6 +188,42 @@ function setupVoterFetch({ router, repo, roles }: EndpointSetupRequirements) {
         res.status(200).json(voter);
       } else {
         res.status(404);
+      }
+    } else {
+      res.status(401).json({
+        message: "Not authenticated",
+      });
+    }
+  });
+}
+
+function setupElectionCreation({
+  router,
+  repo,
+  userRepo,
+  roles,
+}: ElectionEndpointSetupRequirements) {
+  router.post("/election", async (req, res) => {
+    const token = req.headers["authorization"]?.split(" ")[1];
+    const verification = await verifyToken(userRepo, roles, token);
+    if (verification) {
+      const electionSubmission = ElectionSchema.safeParse({
+        title: req.body.title,
+        start_date: new Date(req.body.start_date),
+        end_date: new Date(req.body.end_date),
+      });
+      if (electionSubmission.success) {
+        const title = await repo.createElection(electionSubmission.data);
+        if (title) {
+          res.status(201).json({
+            title: title,
+          });
+          return;
+        }
+      } else {
+        res.status(400).json({
+          message: "Unable to create election, request malformed",
+        });
       }
     } else {
       res.status(401).json({
