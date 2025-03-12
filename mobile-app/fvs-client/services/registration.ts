@@ -10,11 +10,17 @@ type CreateVoter = {
   password: string;
 };
 
+function fixGender(gender: string) {
+  if (gender === "Male") {
+    return "m";
+  }
+  return "f";
+}
+
 async function registerVoter(voter: CreateVoter) {
+  voter.gender = fixGender(voter.gender);
   let url =
-    endpoints.base +
-    ":" +
-    endpoints.port +
+    "https://375f-2402-4000-2340-36a4-6039-4300-9dcd-a359.ngrok-free.app" +
     endpoints.services.registration.createVoter;
   try {
     let response = await fetch(url, {

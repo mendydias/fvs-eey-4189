@@ -30,17 +30,12 @@
 //   try {
 //     await entityRef.set(entity);
 //   } catch (e: any) {
-//     config.logger?.error(e);
 //
 //     throw e;
 //   }
 //   return entityId;
 // }
 //
-async function save(collection: string, entity: any, entityId: any) {
-  return "jsafa";
-}
+import mockdbTest from "./mockdb";
 
-export default {
-  save,
-};
+export default mockdbTest;

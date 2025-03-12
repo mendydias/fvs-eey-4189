@@ -1,0 +1,20 @@
+{
+  "base": {
+    "host": "http://localhost",
+    "port": "8100"
+  },
+  "login": {
+    "endpoint": "/auth/login",
+    "method": "post"
+  },
+  "voter": {
+    "all": {
+      "endpoint": "/register/voters",
+      "method": "get"
+    },
+    "register": {
+      "endpoint": "/register/voter",
+      "method": "post"
+    }
+  }
+}

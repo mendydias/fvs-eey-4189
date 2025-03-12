@@ -14,6 +14,7 @@ import * as Yup from "yup";
 import { router } from "expo-router";
 import Voter, { useVoterStore } from "@/models/voter";
 import registration from "@/services/registration";
+import * as LocalAuthentication from "expo-local-authentication";
 
 const initialPasswordValues = {
   password: "",
@@ -40,31 +41,37 @@ const validate = (values: Yup.InferType<typeof passwordSchema>) => {
   return errors;
 };
 
-type SetErrorMsgStateAction = (msg?: string) => void;
 async function registerVoterWithCredentials(voter: Voter, password: string) {
-  let response = await registration.registerVoter({ ...voter, password });
-  if (response) {
-    if (!response.ok) {
-      const { message } = response.json;
-      Alert.alert("Voter registration failed", message, [
-        {
-          text: "Retry",
-          onPress: () => router.push("/register/details"),
-          style: "cancel",
-        },
-        { text: "Login", onPress: () => router.push("/") },
-      ]);
+  const result = await LocalAuthentication.authenticateAsync({
+    promptMessage: "Please authenticate to register voter",
+  });
+  if (result.success) {
+    let response = await registration.registerVoter({ ...voter, password });
+    if (response) {
+      if (!response.ok) {
+        const { message } = response.json;
+        Alert.alert("Voter registration failed", message, [
+          {
+            text: "Retry",
+            onPress: () => router.push("/register/details"),
+            style: "cancel",
+          },
+          { text: "Login", onPress: () => router.push("/") },
+        ]);
+      } else {
+        Alert.alert(
+          "Voter registration is successful",
+          "Tap the login button to login now",
+        );
+        router.push("/");
+      }
     } else {
-      Alert.alert(
-        "Voter registration is successful",
-        "Tap the login button to login now",
-      );
-      router.push("/");
+      Alert.alert("Something went wrong", "Retry in a few minutes.", [
+        { text: "Ok", onPress: () => router.push("/register/details") },
+      ]);
     }
   } else {
-    Alert.alert("Something went wrong", "Retry in a few minutes.", [
-      { text: "Ok", onPress: () => router.push("/register/details") },
-    ]);
+    console.log(result);
   }
 }
 
