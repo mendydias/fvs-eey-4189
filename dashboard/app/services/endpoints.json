@@ -16,5 +16,11 @@
       "endpoint": "/register/voter",
       "method": "post"
     }
+  },
+  "election": {
+    "create": {
+      "endpoint": "/register/election",
+      "method": "post"
+    }
   }
 }

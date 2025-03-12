@@ -10,6 +10,13 @@ export const VoterSchema = z.object({
 });
 export type Voter = z.infer<typeof VoterSchema>;
 
+export const ElectionSchema = z.object({
+  start_date: z.string().date(),
+  end_date: z.string().date(),
+  title: z.string(),
+});
+export type Election = z.infer<typeof ElectionSchema>;
+
 export async function getAllVoters(token: string) {
   const endpoint = `${endpoints.base.host}:${endpoints.base.port}${endpoints.voter.all.endpoint}`;
   const payload = {
@@ -46,6 +53,30 @@ export async function registerVoter(voter: Voter) {
     console.log(text);
     throw new Error(
       "Invalid response from voter service trying to register voter."
+    );
+  }
+}
+
+export async function createElection(token: string, election: Election) {
+  const endpoint = `${endpoints.base.host}:${endpoints.base.port}${endpoints.election.create.endpoint}`;
+  const payload = {
+    method: endpoints.election.create.method,
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(election),
+  };
+
+  const response = await fetch(endpoint, payload);
+  if (response.ok) {
+    const json = await response.json();
+    return json;
+  } else {
+    const text = await response.text();
+    console.log(text);
+    throw new Error(
+      "Invalid response from the service trying to create an election"
     );
   }
 }
