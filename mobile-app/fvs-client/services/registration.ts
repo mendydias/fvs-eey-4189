@@ -20,7 +20,7 @@ function fixGender(gender: string) {
 async function registerVoter(voter: CreateVoter) {
   voter.gender = fixGender(voter.gender);
   let url =
-    "https://375f-2402-4000-2340-36a4-6039-4300-9dcd-a359.ngrok-free.app" +
+    "https://35f3-2402-4000-b1c0-5f78-e0c6-2f62-9669-b50c.ngrok-free.app" +
     endpoints.services.registration.createVoter;
   try {
     let response = await fetch(url, {
